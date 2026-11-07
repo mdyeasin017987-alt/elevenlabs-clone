@@ -1,0 +1,10 @@
+{
+	"name": "vocalis-workspace",
+	"private": true,
+	"scripts": {
+		"dev": "npm --prefix frontend run dev --",
+		"build": "npm --prefix frontend run build",
+		"check": "npm --prefix frontend run check",
+		"preview": "npm --prefix frontend run preview --"
+	}
+}
