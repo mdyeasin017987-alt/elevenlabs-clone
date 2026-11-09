@@ -1,0 +1,7 @@
+<section class="stats-banner"><div class="container stats-grid"><div class="stat-item"><div class="mini-bars" aria-hidden="true"><span></span><span></span><span></span></div><div><strong>500K+</strong><span>Happy Creators</span></div></div><div class="stat-item"><span class="stat-symbol" aria-hidden="true">◎</span><div><strong>50+</strong><span>Languages</span></div></div><div class="stat-item"><span class="stat-symbol" aria-hidden="true">ϟ</span><div><strong>99.9%</strong><span>Uptime</span></div></div><div class="stat-item"><span class="stat-symbol" aria-hidden="true">★</span><div><strong>4.8/5</strong><span>User Rating</span></div></div></div></section>
+
+<section class="cta-banner-wrapper" id="cta"><div class="container"><div class="cta-banner"><div class="cta-graphic" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div><div><h2>Ready to bring your ideas to life?</h2><p>Start with Vocalis today — it's free, and takes less than a minute.</p></div><a href="#features" class="primary-cta light-cta"><span>Get started free</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7" /></svg></a></div></div></section>
+
+<style>
+	.stat-symbol { display: grid; width: 24px; height: 24px; flex: 0 0 auto; place-items: center; font-size: 22px; line-height: 1; }
+</style>
