@@ -144,7 +144,7 @@
 	svg { display: block; }
 
 	.page-shell {
-		overflow-x: hidden;
+		overflow-x: clip;
 		background: #fff;
 		color: #111111;
 	}
@@ -212,7 +212,7 @@
 		text-decoration: none;
 		cursor: pointer;
 	}
-	.with-caret svg, .language-pill svg, .arrow-group svg, .mini-player .mini-actions svg, .header-controls svg, .cta-banner .primary-cta svg, .primary-cta svg, .secondary-cta svg, .sign-in, .nav-link svg, .download-button svg, .mini-play svg, .play-button svg, .voice-play svg, .arrow-bubble svg, .feature-icon svg {
+	.with-caret svg, .language-pill svg, .arrow-group svg, .mini-player .mini-actions svg, .header-controls svg, .cta-banner .primary-cta svg, .primary-cta svg, .secondary-cta svg, .nav-link svg, .download-button svg, .mini-play svg, .play-button svg, .voice-play svg, .arrow-bubble svg, .feature-icon svg {
 		width: 14px;
 		height: 14px;
 		stroke: currentColor;
@@ -378,6 +378,9 @@
 	.avatar-stack img:first-child { margin-left: 0; }
 	.hero-visual {
 		position: relative;
+		width: 100%;
+		max-width: 568px;
+		margin-inline: auto;
 		padding: 0 0 0 1.5rem;
 	}
 	.mini-badge {
@@ -662,7 +665,7 @@
 	}
 	.brand-mark.tiny .bar { width: 3px; }
 	.studio-sidebar nav { display: grid; gap: 0.4rem; }
-	.studio-sidebar nav a, .sidebar-footer a {
+	.studio-link {
 		display: flex;
 		align-items: center;
 		gap: 0.6rem;
@@ -673,7 +676,7 @@
 		font-weight: 600;
 		color: #6b7280;
 	}
-	.studio-sidebar nav a.active {
+	.studio-link.active {
 		background: #fff;
 		color: #111111;
 		border: 1px solid rgba(17,17,17,0.06);
@@ -1071,7 +1074,7 @@
 		line-height: 1;
 		letter-spacing: -0.06em;
 	}
-	.stat-item span {
+	.stat-item strong + span {
 		display: block;
 		margin-top: 0.25rem;
 		font-size: 0.7rem;
@@ -1163,7 +1166,7 @@
 		height: 16px;
 		fill: currentColor;
 	}
-	.footer-column h4, .newsletter-block h4 {
+	.footer-column h3, .newsletter-block h3 {
 		margin: 0 0 1rem;
 		font-size: 0.75rem;
 		letter-spacing: 0.06em;
@@ -1216,7 +1219,7 @@
 		color: #fff;
 		cursor: pointer;
 	}
-	.newsletter-block button svg, .language-switcher svg, .bottom-links a + a { width: 13px; height: 13px; }
+	.newsletter-block button svg, .language-switcher svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 	.footer-bottom {
 		display: flex;
 		align-items: center;
@@ -1242,9 +1245,24 @@
 		gap: 0.3rem;
 		color: #6b7280;
 	}
+
+	.nav-actions .primary-cta { height: auto; }
+	.hero-wave path { vector-effect: non-scaling-stroke; }
+	.feature-icon svg { width: 20px; height: 20px; }
+	.bullet-icon svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+	.use-case-card { display: block; color: inherit; text-decoration: none; }
+	.use-case-card:focus-visible { outline-offset: 2px; }
+	.studio-link { cursor: default; }
+	.download-button:disabled, .mini-actions button:disabled, .arrow-group button:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+	.arrow-group button { width: 44px; height: 44px; }
+	.voice-play { width: 44px; height: 44px; }
+	.social-links a { font-size: 0.7rem; font-weight: 700; }
+	.newsletter-block .newsletter-status { margin: 0.6rem 0 0; color: #4b5563; }
 	@media (max-width: 1080px) {
-		.hero-grid, .features-grid, .footer-top { grid-template-columns: 1fr; }
-		.hero-visual { padding-left: 0; }
+		.hero-grid, .features-grid { grid-template-columns: 1fr; }
+		.footer-top { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+		.brand-block, .newsletter-block { grid-column: 1 / -1; }
+		.hero-visual { padding-left: 0; max-width: 520px; }
 		.hero-feature-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 		.use-case-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 		.voice-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -1253,7 +1271,6 @@
 		.cta-banner { flex-direction: column; align-items: flex-start; }
 	}
 	@media (max-width: 720px) {
-		.desktop-nav, .nav-actions .sign-in { display: none; }
 		.topbar-inner { height: 68px; }
 		.hero-section { padding-top: 1.5rem; }
 		.hero-grid { grid-template-columns: 1fr; gap: 2rem; }
@@ -1270,6 +1287,7 @@
 		.hero-copy h1 { max-width: 100%; }
 		.cta-row { flex-direction: column; align-items: stretch; }
 		.primary-cta, .secondary-cta { width: 100%; }
+		.nav-actions .primary-cta { width: auto; }
 		.social-proof { align-items: flex-start; flex-direction: column; }
 		.voice-card-head { flex-wrap: wrap; }
 		.player-row { flex-wrap: wrap; }

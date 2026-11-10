@@ -11,9 +11,6 @@
 <svelte:head>
 	<title>Vocalis - Create realistic AI voices in seconds</title>
 	<meta name="description" content="Create realistic AI voices in seconds with Vocalis." />
-	<link rel="preconnect" href="https://fonts.googleapis.com" />
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
-	<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 </svelte:head>
 
 <div class="page-shell">
