@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { player, toggleSpeech } from '$lib/speech.svelte';
+	import { player, toggleSpeech } from '#lib/speech.svelte';
 
 	const sampleText = 'Hello! Welcome to Vocalis. Natural, expressive, powerful.';
 	const heroFeatures = [
@@ -20,7 +20,7 @@
 			<div class="badge-row"><span class="badge badge-primary"><span class="dot"></span>Bangladesh's most advanced AI voice platform</span></div>
 			<h1>Create realistic<br />AI voices in seconds</h1>
 			<p>Generate natural-sounding speech, clone your voice, and bring your ideas to life with the power of AI.</p>
-			<div class="cta-row"><a href="#features" class="primary-cta large"><span>Get started free</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7" /></svg></a><a href="#voices" class="secondary-cta large"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" /></svg><span>Explore voices</span></a></div>
+			<div class="cta-row"><a href="/home" class="primary-cta large"><span>Get started free</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7" /></svg></a><a href="#voices" class="secondary-cta large"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" /></svg><span>Explore voices</span></a></div>
 			<div class="social-proof"><div class="avatar-stack" aria-hidden="true"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=80&q=80" alt="" width="34" height="34" loading="lazy" decoding="async" /><img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=80&q=80" alt="" width="34" height="34" loading="lazy" decoding="async" /><img src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=80&q=80" alt="" width="34" height="34" loading="lazy" decoding="async" /><img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=80&q=80" alt="" width="34" height="34" loading="lazy" decoding="async" /></div><span>Trusted by 500K+ creators worldwide</span></div>
 		</div>
 		<div class="hero-visual"><div class="mini-badge">Multi-Language Support</div><div class="voice-card">

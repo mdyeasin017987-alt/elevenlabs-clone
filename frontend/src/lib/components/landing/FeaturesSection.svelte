@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { player, toggleSpeech } from '$lib/speech.svelte';
+	import { player, toggleSpeech } from '#lib/speech.svelte';
 
 	const sampleText = 'Hello! Welcome to Vocalis.';
 	const limit = 5000;

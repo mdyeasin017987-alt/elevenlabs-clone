@@ -5,6 +5,7 @@
 	const navItems = [
 		{ label: 'Products', href: '#features' },
 		{ label: 'Voices', href: '#voices' },
+		{ label: 'Dashboard', href: '/home' },
 		{ label: 'Get started', href: '#cta' },
 		{ label: 'Resources', href: '#footer' }
 	];
@@ -26,7 +27,7 @@
 		</nav>
 		<div class="nav-actions">
 			<a href="/" class="sign-in">Sign in</a>
-			<Button href="#features" class="primary-cta"><span>Get started free</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7" /></svg></Button>
+			<Button href="/home" class="primary-cta"><span>Get started free</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7" /></svg></Button>
 		</div>
 		<button type="button" class="menu-toggle" class:open={menuOpen} aria-label={menuOpen ? 'Close menu' : 'Open menu'} aria-expanded={menuOpen} aria-controls="primary-nav" onclick={() => (menuOpen = !menuOpen)}>
 			<span></span><span></span>
