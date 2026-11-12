@@ -1,17 +1,12 @@
 <script lang="ts">
-	import { Activity, BarChart3, Crown, MoreHorizontal, Pause, Play } from '@lucide/svelte';
-	import { Button } from '#lib/components/ui/button';
+	import { Activity, BarChart3, Crown, Pause, Play } from '@lucide/svelte';
+	import { Button, SurfaceCard } from '#lib/components/ui';
 	import { player, toggleSpeech } from '#lib/speech.svelte';
-
-	const activities = [
-		{ title: 'বাংলা ভয়েস টেস্ট', age: '2 minutes ago', text: 'আজকের দিনটি সুন্দর হোক।' },
-		{ title: 'Product Demo Voice', age: '1 hour ago', text: 'Meet the next generation of thoughtful audio experiences.' },
-		{ title: 'My Project', age: '2 hours ago', text: 'Your story, brought naturally to life.' }
-	];
+	import { dashboardActivities } from '#lib/data/dashboard';
 </script>
 
 <aside class="overview-column" aria-label="Account overview">
-	<section class="panel usage-panel" id="usage" aria-labelledby="usage-title">
+	<SurfaceCard class="panel usage-panel" id="usage" aria-labelledby="usage-title">
 		<div class="panel-heading">
 			<h2 id="usage-title"><BarChart3 size={16} /> Usage</h2>
 			<a href="#usage" class="text-link">View Usage <span aria-hidden="true">→</span></a>
@@ -22,25 +17,24 @@
 			<span></span>
 		</div>
 		<div class="plan-row"><span class="plan-label"><Crown size={15} /> Pro Plan</span><span class="status-pill">Active</span></div>
-	</section>
+	</SurfaceCard>
 
-	<section class="panel activity-panel" id="activity" aria-labelledby="activity-title">
+	<SurfaceCard class="panel activity-panel" id="activity" aria-labelledby="activity-title">
 		<div class="panel-heading">
 			<h2 id="activity-title"><Activity size={16} /> Recent Activity</h2>
 			<a href="#activity" class="text-link">View all <span aria-hidden="true">→</span></a>
 		</div>
 		<div class="activity-list">
-			{#each activities as activity, index}
+			{#each dashboardActivities as activity, index}
 				<div class="activity-item">
-					<Button variant="secondary" size="icon-sm" class="play-control" aria-label={`${player.active === `activity-${index}` ? 'Stop' : 'Play'} ${activity.title}`} aria-pressed={player.active === `activity-${index}`} onclick={() => toggleSpeech(`activity-${index}`, activity.text)}>
+					<Button variant="secondary" size="icon-sm" class="play-control" aria-label={`${player.active === `activity-${index}` ? 'Stop' : 'Play'} ${activity.title}`} aria-pressed={player.active === `activity-${index}`} onclick={() => toggleSpeech(`activity-${index}`, activity.text, { lang: activity.lang })}>
 						{#if player.active === `activity-${index}`}<Pause size={13} />{:else}<Play size={13} />{/if}
 					</Button>
 					<div class="activity-copy"><strong>{activity.title}</strong><span>{activity.age}</span></div>
-					<Button variant="ghost" size="icon-xs" aria-label={`More options for ${activity.title}`}><MoreHorizontal size={17} /></Button>
 				</div>
 			{/each}
 		</div>
-	</section>
+	</SurfaceCard>
 
 	<section class="upgrade-panel" aria-labelledby="upgrade-title">
 		<div class="upgrade-decoration" aria-hidden="true">

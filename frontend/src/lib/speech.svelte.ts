@@ -46,7 +46,7 @@ export function speak(id: string, text: string, options: SpeechOptions = {}): bo
 }
 
 /** Click handler helper: toggles playback for `id`. */
-export function toggleSpeech(id: string, text: string): void {
+export function toggleSpeech(id: string, text: string, options: SpeechOptions = {}): void {
 	if (player.active === id) stopSpeaking();
-	else speak(id, text);
+	else speak(id, text, options);
 }

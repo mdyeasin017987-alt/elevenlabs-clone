@@ -1,10 +1,23 @@
 <script lang="ts">
 	import { ArrowRight, Bell, Menu, Search } from '@lucide/svelte';
-	import { Button } from '#lib/components/ui/button';
+	import { Button } from '#lib/components/ui';
 
 	let { mobileOpen = $bindable(false) } = $props();
 	let query = $state('');
+	let searchInput: HTMLInputElement;
+
+	// Keyboard shortcut mirrors the familiar command palette affordance.
+	// It focuses the search field only; global result filtering is intentionally
+	// left for the future search endpoint rather than showing fake results.
+	function handleShortcut(event: KeyboardEvent) {
+		if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
+			event.preventDefault();
+			searchInput?.focus();
+		}
+	}
 </script>
+
+<svelte:window onkeydown={handleShortcut} />
 
 <header class="topbar" id="top">
 	<div class="topbar-inner">
@@ -14,7 +27,7 @@
 			</Button>
 			<label class="search-box">
 				<Search size={16} aria-hidden="true" />
-				<input bind:value={query} type="search" placeholder="Search voices, projects..." aria-label="Search voices or projects" />
+				<input bind:this={searchInput} bind:value={query} type="search" placeholder="Search voices, projects..." aria-label="Search voices or projects" />
 				<kbd>⌘ + K</kbd>
 			</label>
 		</div>
