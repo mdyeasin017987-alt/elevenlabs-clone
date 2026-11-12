@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { Clock3, FolderClosed, Home, Library, Mic2, Moon, Settings, Sparkles, Sun, X } from '@lucide/svelte';
-	import { Button } from '#lib/components/ui/button';
+	import { Clock3, FolderClosed, Home, Library, Mic2, Settings, Sparkles, Sun, X } from '@lucide/svelte';
+	import { Button, BrandMark } from '#lib/components/ui';
 
 	let { mobileOpen = $bindable(false) } = $props();
 	let activeSection = $state('Home');
@@ -13,7 +13,12 @@
 		{ label: 'History', icon: Clock3, href: '#activity' },
 		{ label: 'Settings', icon: Settings, href: '#studio' }
 	];
+	function handleWindowKeydown(event: KeyboardEvent) {
+		if (event.key === 'Escape') mobileOpen = false;
+	}
 </script>
+
+<svelte:window onkeydown={handleWindowKeydown} />
 
 {#if mobileOpen}
 	<button class="sidebar-scrim" aria-label="Close navigation" onclick={() => (mobileOpen = false)}></button>
@@ -23,7 +28,7 @@
 	<div class="sidebar-main">
 		<div class="brand-row">
 			<a class="brand" href="#top" onclick={() => (mobileOpen = false)} aria-label="Vocalis home">
-				<span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+				<BrandMark />
 				<span>Vocalis</span>
 			</a>
 			<Button variant="ghost" size="icon-sm" class="mobile-close" aria-label="Close menu" onclick={() => (mobileOpen = false)}>
@@ -57,9 +62,10 @@
 			<p>Unlock more credits, premium voices and advanced features.</p>
 			<Button href="#usage" class="upgrade-button">Upgrade <span aria-hidden="true">→</span></Button>
 		</div>
-		<div class="theme-switch" aria-label="Theme settings">
-			<Button variant="secondary" size="icon-sm" aria-label="Light theme selected"><Sun size={16} /></Button>
-			<Button variant="ghost" size="icon-sm" aria-label="Dark theme"><Moon size={16} /></Button>
+		<!-- Light theme is the only implemented theme. A toggle is intentionally
+		     not shown until dark-mode tokens are applied to dashboard components. -->
+		<div class="theme-indicator" aria-label="Current theme: light">
+			<Sun size={15} /><span>Light appearance</span>
 		</div>
 		<button class="profile" type="button">
 			<span class="avatar">S</span>
@@ -87,12 +93,6 @@
 	.sidebar-main { display: flex; flex-direction: column; }
 	.brand-row { display: flex; align-items: center; justify-content: space-between; padding: 0 7px; }
 	.brand { display: inline-flex; align-items: center; gap: 9px; color: #0f172a; font-size: 20px; font-weight: 750; letter-spacing: 0; text-decoration: none; }
-	.brand-mark { display: flex; height: 24px; align-items: center; gap: 3px; }
-	.brand-mark i { width: 3px; border-radius: 99px; background: #111827; }
-	.brand-mark i:nth-child(1) { height: 14px; }
-	.brand-mark i:nth-child(2) { height: 24px; }
-	.brand-mark i:nth-child(3) { height: 17px; }
-	.brand-mark i:nth-child(4) { height: 9px; }
 	.nav-caption { margin: 42px 10px 12px; color: #94a3b8; font-size: 10px; font-weight: 700; letter-spacing: 0.1em; }
 	.nav-list { display: grid; gap: 4px; }
 	.nav-item { display: flex; align-items: center; gap: 12px; min-height: 42px; border-radius: 10px; padding: 0 11px; color: #64748b; font-size: 13px; font-weight: 550; text-decoration: none; transition: background .16s ease, color .16s ease; }
@@ -104,8 +104,7 @@
 	.plan-title :global(svg) { color: #1e293b; }
 	.plan-box p { margin: 9px 0 13px; color: #64748b; font-size: 11px; line-height: 1.55; }
 	:global(.upgrade-button) { display: flex; width: 100%; justify-content: space-between; background: #111827; color: white; font-size: 11px; }
-	.theme-switch { display: flex; width: max-content; gap: 3px; border: 1px solid #e8e9e7; border-radius: 7px; padding: 3px; }
-	.theme-switch :global(button) { border-radius: 5px; }
+	.theme-indicator { display: inline-flex; width: max-content; align-items: center; gap: 7px; border: 1px solid #e8e9e7; border-radius: 8px; padding: 7px 9px; color: #64748b; font-size: 10px; }
 	.profile { display: flex; align-items: center; gap: 10px; border: 0; border-top: 1px solid #eeefec; background: transparent; padding: 15px 3px 0; text-align: left; cursor: pointer; }
 	.avatar { display: grid; width: 34px; height: 34px; place-items: center; border-radius: 50%; background: #e2e8f0; color: #334155; font-size: 12px; font-weight: 700; }
 	.profile-copy { display: grid; gap: 3px; color: #2a2d2c; font-size: 11px; }

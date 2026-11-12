@@ -15,6 +15,16 @@
 	<meta name="description" content="Create and manage natural-sounding speech with Vocalis Studio." />
 </svelte:head>
 
+<!--
+	Dashboard composition root:
+	- Sidebar owns workspace navigation and the mobile drawer.
+	- Header owns global search affordance and primary CTA.
+	- SpeechStudio owns TTS input/voice controls only.
+	- DashboardOverview owns account usage and activity summaries.
+	- VoiceLibrary and RecentProjects render data-driven reusable collections.
+	Keep API calls/data loading out of presentational components when backend
+	endpoints are introduced; pass typed records down as props instead.
+-->
 <div class="dashboard-shell">
 	<DashboardSidebar bind:mobileOpen />
 	<div class="dashboard-main">

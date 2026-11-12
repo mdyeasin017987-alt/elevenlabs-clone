@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { AudioLines, ChevronDown, Globe2, Pause, Play, Settings2, Sparkles, Volume2 } from '@lucide/svelte';
-	import { Button } from '#lib/components/ui/button';
+	import { Button } from '#lib/components/ui';
 	import { player, speak, speechSupported, stopSpeaking } from '#lib/speech.svelte';
 
 	const maxCharacters = 5000;

@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Vocalis - AI Speech Dashboard</title>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Fonts: Inter / Plus Jakarta Sans -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            sidebarBg: '#F8F9FA',
+            canvasBg: '#F3F4F6',
+            cardBorder: '#E5E7EB',
+            accentDark: '#111827',
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="custom-scroll-and-visuals">
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #FBFBFC;
+      color: #0F172A;
+      -webkit-font-smoothing: antialiased;
+    }
+    
+    /* Subtle custom borders and cards */
+    .card-base {
+      background: #FFFFFF;
+      border: 1px solid #EBECEF;
+      border-radius: 20px;
+    }
+
+    /* Wave visual blending */
+    .wave-blend {
+      mix-blend-mode: multiply;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex text-slate-900 bg-[#F9FAFB]">
+<!-- BEGIN: LeftSidebar -->
+<aside class="w-64 flex-shrink-0 bg-white border-r border-slate-200/80 flex flex-col justify-between p-5 min-h-screen sticky top-0 h-screen overflow-y-auto">
+<!-- Top Part of Sidebar -->
+<div class="space-y-7">
+<!-- Logo -->
+<div class="flex items-center gap-2.5 px-2 pt-1">
+<div class="flex items-center gap-1">
+<span class="w-1 h-3.5 bg-black rounded-full"></span>
+<span class="w-1.5 h-6 bg-black rounded-full"></span>
+<span class="w-1 h-4 bg-black rounded-full"></span>
+<span class="w-1 h-2 bg-black rounded-full"></span>
+</div>
+<span class="text-xl font-bold tracking-tight text-slate-900">Vocalis</span>
+</div>
+<!-- Navigation Links -->
+<nav class="space-y-1.5 font-medium text-sm">
+<!-- Home (Active) -->
+<a class="flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl bg-slate-100 text-slate-900 font-semibold transition-all" href="#">
+<svg class="w-4 h-4 fill-current text-slate-900" viewbox="0 0 24 24">
+<path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"></path>
+</svg>
+<span>Home</span>
+</a>
+<!-- Voices -->
+<a class="flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl text-slate-500 hover:text-slate-900 hover:bg-slate-50 transition-all" href="#">
+<svg class="w-4 h-4 stroke-current stroke-2 fill-none" viewbox="0 0 24 24">
+<path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M19 10v2a7 7 0 0 1-14 0v-2" stroke-linecap="round" stroke-linejoin="round"></path>
+<line x1="12" x2="12" y1="19" y2="22"></line>
+</svg>
+<span>Voices</span>
+</a>
+<!-- Projects -->
+<a class="flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl text-slate-500 hover:text-slate-900 hover:bg-slate-50 transition-all" href="#">
+<svg class="w-4 h-4 stroke-current stroke-2 fill-none" viewbox="0 0 24 24">
+<path d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>Projects</span>
+</a>
+<!-- Library -->
+<a class="flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl text-slate-500 hover:text-slate-900 hover:bg-slate-50 transition-all" href="#">
+<svg class="w-4 h-4 stroke-current stroke-2 fill-none" viewbox="0 0 24 24">
+<rect height="16" rx="2" width="16" x="4" y="4"></rect>
+<rect height="6" width="6" x="9" y="9"></rect>
+<line x1="9" x2="9" y1="1" y2="4"></line>
+<line x1="15" x2="15" y1="1" y2="4"></line>
+<line x1="9" x2="9" y1="20" y2="23"></line>
+<line x1="15" x2="15" y1="20" y2="23"></line>
+</svg>
+<span>Library</span>
+</a>
+<!-- History -->
+<a class="flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl text-slate-500 hover:text-slate-900 hover:bg-slate-50 transition-all" href="#">
+<svg class="w-4 h-4 stroke-current stroke-2 fill-none" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="10"></circle>
+<polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+<span>History</span>
+</a>
+<!-- Settings -->
+<a class="flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl text-slate-500 hover:text-slate-900 hover:bg-slate-50 transition-all" href="#">
+<svg class="w-4 h-4 stroke-current stroke-2 fill-none" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="3"></circle>
+<path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>Settings</span>
+</a>
+</nav>
+</div>
+<!-- Bottom Part of Sidebar -->
+<div class="space-y-4 pt-6">
+<!-- Upgrade to Pro Card -->
+<div class="bg-[#F8F9FB] border border-slate-200/70 rounded-2xl p-4 space-y-3">
+<div class="flex items-center gap-1.5 text-slate-800 font-semibold text-xs tracking-wide">
+<svg class="w-3.5 h-3.5 fill-current text-slate-800" viewbox="0 0 24 24">
+<path d="M12 2L14.5 9L22 11.5L14.5 14L12 21L9.5 14L2 11.5L9.5 9L12 2Z"></path>
+</svg>
+<span>Upgrade to Pro</span>
+</div>
+<p class="text-[11px] text-slate-500 leading-relaxed">
+          Unlock more credits, premium voices and advanced features.
+        </p>
+<button class="w-full bg-black text-white hover:bg-slate-800 text-xs font-semibold py-2 px-3 rounded-full flex items-center justify-center gap-1.5 shadow-sm transition">
+<span>Upgrade</span>
+<span>→</span>
+</button>
+</div>
+<!-- Theme Mode Switcher -->
+<div class="flex items-center px-1">
+<div class="bg-slate-100 p-0.5 rounded-full flex items-center border border-slate-200/80 cursor-pointer">
+<span class="w-6 h-6 flex items-center justify-center rounded-full bg-white shadow-xs text-slate-700">
+<!-- Sun icon -->
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="4"></circle>
+<path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
+</svg>
+</span>
+<span class="w-6 h-6 flex items-center justify-center rounded-full text-slate-400">
+<!-- Moon icon -->
+<svg class="w-3 h-3 fill-current" viewbox="0 0 24 24">
+<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+</svg>
+</span>
+</div>
+</div>
+<!-- User Profile -->
+<div class="pt-1 flex items-center justify-between px-1">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-xs font-bold text-slate-700">
+            S
+          </div>
+<span class="text-xs font-semibold text-slate-800">Sahadat</span>
+</div>
+<button class="text-slate-400 hover:text-slate-600">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<polyline points="6 9 12 15 18 9"></polyline>
+</svg>
+</button>
+</div>
+</div>
+</aside>
+<!-- END: LeftSidebar -->
+<!-- BEGIN: MainContentArea -->
+<main class="flex-1 flex flex-col min-w-0 bg-[#FBFBFC]">
+<!-- Top Header -->
+<header class="h-16 px-8 flex items-center justify-between border-b border-slate-100 bg-white/70 backdrop-blur-sm sticky top-0 z-20">
+<!-- Search Input -->
+<div class="relative w-[480px]">
+<div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<circle cx="11" cy="11" r="8"></circle>
+<line x1="21" x2="16.65" y1="21" y2="16.65"></line>
+</svg>
+</div>
+<input class="w-full bg-[#F3F4F6] border-none text-xs rounded-full pl-9 pr-4 py-2 text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-300" placeholder="Search voices, projects... (⌘ + K)" type="text"/>
+</div>
+<!-- Top Right Actions -->
+<div class="flex items-center gap-4">
+<button class="relative p-2 text-slate-600 hover:text-slate-900 rounded-full hover:bg-slate-100 transition">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+<button class="bg-black text-white hover:bg-slate-800 text-xs font-semibold px-4 py-2 rounded-full flex items-center gap-1.5 shadow-sm transition">
+<span>Generate Speech</span>
+<span>→</span>
+</button>
+</div>
+</header>
+<!-- Scrollable Body Content -->
+<div class="p-8 space-y-7 max-w-[1400px]">
+<!-- Greeting Header -->
+<div>
+<h1 class="text-2xl font-bold tracking-tight text-slate-900">Welcome back, Sahadat!</h1>
+<p class="text-xs text-slate-500 mt-1 font-medium">Turn your text into lifelike speech with Vocalis.</p>
+</div>
+<!-- Main Upper Grid (TTS Studio Card + Right Info Column) -->
+<div class="grid grid-cols-12 gap-6 items-start">
+<!-- LEFT: Text to Speech Hero Card (8 cols) -->
+<div class="col-span-12 xl:col-span-8 card-base relative overflow-hidden bg-white p-7 shadow-[0_1px_3px_rgba(0,0,0,0.03)] border border-slate-200/70">
+<!-- Wave graphic in the top right background -->
+<div class="absolute top-2 -right-4 w-[52%] h-[190px] wave-blend pointer-events-none opacity-90 overflow-hidden">
+<img alt="Audio Wave Visualization" class="w-full h-full object-cover object-left" src="https://lh3.googleusercontent.com/aida/ALJJyrCp0LcMy8sw_9yYRxauXpFrOOzis1SMwwISwc7OoZ1r8ZBpX6eD2gfpHOY-Z3kQqdYWEj2q0Xmn-QSoCsfKuT5sVpuWxkNEpGTq5heTOcd2EGJVjdP6C838fNUtMpSmTu_Gb0fO3BO5KlOajuRIApQG5ATzYuiq_1h_xYdaf75sFF3VtdMKNh1A1Gu5gXaTm6sqPrMDBWhv3uDj4y5wjzBL72oVJLuUOAg1hxI25oBzwg"/>
+</div>
+<div class="relative z-10 space-y-5">
+<!-- Studio Header Tag -->
+<div class="flex items-center gap-2 text-slate-800 text-xs font-semibold">
+<div class="flex items-center gap-0.5">
+<span class="w-0.5 h-2 bg-slate-900 rounded-full"></span>
+<span class="w-0.5 h-3.5 bg-slate-900 rounded-full"></span>
+<span class="w-0.5 h-2 bg-slate-900 rounded-full"></span>
+</div>
+<span>Text to Speech</span>
+</div>
+<!-- Big Banner Title & Description -->
+<div class="max-w-[440px] space-y-1.5">
+<h2 class="text-[26px] leading-tight font-extrabold text-slate-900 tracking-tight">
+                Convert text to<br/>natural speech
+              </h2>
+<p class="text-xs text-slate-500 leading-relaxed font-normal pt-1">
+                Type anything, choose a voice, and listen instantly.<br/>
+                Support for Bangla and 50+ languages.
+              </p>
+</div>
+<!-- Voice Controls Toolbar -->
+<div class="flex flex-wrap items-center gap-2.5 pt-1">
+<!-- Language Dropdown -->
+<button class="bg-white border border-slate-200/90 text-slate-700 text-xs font-medium px-3.5 py-1.5 rounded-full flex items-center gap-2 hover:bg-slate-50 transition">
+<svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="10"></circle>
+<line x1="2" x2="22" y1="12" y2="12"></line>
+<path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+</svg>
+<span>Bangla (Bangladesh)</span>
+<svg class="w-3 h-3 text-slate-400 ml-0.5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<polyline points="6 9 12 15 18 9"></polyline>
+</svg>
+</button>
+<!-- Voice Dropdown -->
+<button class="bg-white border border-slate-200/90 text-slate-700 text-xs font-medium px-3.5 py-1.5 rounded-full flex items-center gap-2 hover:bg-slate-50 transition">
+<svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+<path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+</svg>
+<span>Ayesha</span>
+<svg class="w-3 h-3 text-slate-400 ml-0.5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<polyline points="6 9 12 15 18 9"></polyline>
+</svg>
+</button>
+<!-- Play Sample Button -->
+<button class="bg-slate-100 hover:bg-slate-200/80 text-slate-800 text-xs font-semibold px-3.5 py-1.5 rounded-full flex items-center gap-1.5 transition">
+<svg class="w-2.5 h-2.5 fill-current text-slate-800" viewbox="0 0 24 24">
+<polygon points="5 3 19 12 5 21 5 3"></polygon>
+</svg>
+<span>Play Sample</span>
+</button>
+</div>
+<!-- Text Input Container -->
+<div class="border border-slate-200/90 rounded-2xl bg-white p-4 focus-within:border-slate-400 transition-all">
+<textarea class="w-full border-none resize-none p-0 text-xs text-slate-800 placeholder-slate-400 focus:ring-0 leading-relaxed" placeholder="Type your text here..." rows="4"></textarea>
+<div class="flex justify-end pt-2">
+<span class="text-[11px] font-medium text-slate-400 tracking-wider">0 / 5,000</span>
+</div>
+</div>
+<!-- Action Bottom Bar -->
+<div class="flex items-center justify-between pt-1">
+<button class="flex items-center gap-1.5 text-xs font-semibold text-slate-700 hover:text-slate-900 transition">
+<svg class="w-3.5 h-3.5 text-slate-600" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="3"></circle>
+<path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>Advanced Settings</span>
+<svg class="w-3 h-3 text-slate-500" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<polyline points="6 9 12 15 18 9"></polyline>
+</svg>
+</button>
+<button class="bg-black hover:bg-slate-800 text-white text-xs font-semibold px-5 py-2.5 rounded-full flex items-center gap-2 shadow-sm transition">
+<div class="flex items-center gap-0.5">
+<span class="w-0.5 h-2 bg-white rounded-full"></span>
+<span class="w-0.5 h-3.5 bg-white rounded-full"></span>
+<span class="w-0.5 h-2 bg-white rounded-full"></span>
+</div>
+<span>Generate Speech</span>
+<span>→</span>
+</button>
+</div>
+</div>
+</div>
+<!-- RIGHT COLUMN: Usage + Recent Activity + Promo (4 cols) -->
+<div class="col-span-12 xl:col-span-4 space-y-4">
+<!-- Usage Card -->
+<div class="card-base p-5 bg-white space-y-3.5">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2 text-xs font-semibold text-slate-800">
+<svg class="w-4 h-4 text-slate-700" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<line x1="18" x2="18" y1="20" y2="10"></line>
+<line x1="12" x2="12" y1="20" y2="4"></line>
+<line x1="6" x2="6" y1="20" y2="14"></line>
+</svg>
+<span>Usage</span>
+</div>
+<a class="text-xs font-medium text-slate-700 hover:text-black flex items-center gap-1" href="#">
+<span>View Usage</span>
+<span>→</span>
+</a>
+</div>
+<div>
+<div class="text-2xl font-black text-slate-900">2,500</div>
+<div class="text-xs text-slate-500 font-medium mt-0.5">characters remaining</div>
+</div>
+<!-- Progress Bar -->
+<div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+<div class="bg-black h-2 rounded-full w-[70%]"></div>
+</div>
+<!-- Pro Plan Badge -->
+<div class="pt-1 flex items-center justify-between">
+<div class="flex items-center gap-1.5 text-xs font-bold text-slate-900">
+<span class="text-amber-500">👑</span>
+<span>Pro Plan</span>
+</div>
+<span class="bg-emerald-50 text-emerald-600 text-[10px] font-semibold px-2 py-0.5 rounded-full border border-emerald-200/60">
+                Active
+              </span>
+</div>
+</div>
+<!-- Recent Activity Card -->
+<div class="card-base p-5 bg-white space-y-4">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2 text-xs font-semibold text-slate-800">
+<svg class="w-4 h-4 text-slate-700" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="10"></circle>
+<polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+<span>Recent Activity</span>
+</div>
+<a class="text-xs font-medium text-slate-700 hover:text-black flex items-center gap-1" href="#">
+<span>View all</span>
+<span>→</span>
+</a>
+</div>
+<!-- Activity List -->
+<div class="space-y-3.5">
+<!-- Item 1 -->
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<button class="w-7 h-7 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-800 transition">
+<svg class="w-2.5 h-2.5 fill-current ml-0.5" viewbox="0 0 24 24">
+<polygon points="5 3 19 12 5 21 5 3"></polygon>
+</svg>
+</button>
+<div>
+<h4 class="text-xs font-semibold text-slate-900 leading-none">বাংলা ভয়েস টেস্ট</h4>
+<span class="text-[10px] text-slate-400 mt-1 block">2 minutes ago</span>
+</div>
+</div>
+<button class="text-slate-400 hover:text-slate-600">
+<svg class="w-3.5 h-3.5" fill="currentColor" viewbox="0 0 24 24">
+<circle cx="12" cy="5" r="2"></circle>
+<circle cx="12" cy="12" r="2"></circle>
+<circle cx="12" cy="19" r="2"></circle>
+</svg>
+</button>
+</div>
+<!-- Item 2 -->
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<button class="w-7 h-7 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-800 transition">
+<svg class="w-2.5 h-2.5 fill-current ml-0.5" viewbox="0 0 24 24">
+<polygon points="5 3 19 12 5 21 5 3"></polygon>
+</svg>
+</button>
+<div>
+<h4 class="text-xs font-semibold text-slate-900 leading-none">Product Demo Voice</h4>
+<span class="text-[10px] text-slate-400 mt-1 block">1 hour ago</span>
+</div>
+</div>
+<button class="text-slate-400 hover:text-slate-600">
+<svg class="w-3.5 h-3.5" fill="currentColor" viewbox="0 0 24 24">
+<circle cx="12" cy="5" r="2"></circle>
+<circle cx="12" cy="12" r="2"></circle>
+<circle cx="12" cy="19" r="2"></circle>
+</svg>
+</button>
+</div>
+<!-- Item 3 -->
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<button class="w-7 h-7 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-800 transition">
+<svg class="w-2.5 h-2.5 fill-current ml-0.5" viewbox="0 0 24 24">
+<polygon points="5 3 19 12 5 21 5 3"></polygon>
+</svg>
+</button>
+<div>
+<h4 class="text-xs font-semibold text-slate-900 leading-none">My Project</h4>
+<span class="text-[10px] text-slate-400 mt-1 block">2 hours ago</span>
+</div>
+</div>
+<button class="text-slate-400 hover:text-slate-600">
+<svg class="w-3.5 h-3.5" fill="currentColor" viewbox="0 0 24 24">
+<circle cx="12" cy="5" r="2"></circle>
+<circle cx="12" cy="12" r="2"></circle>
+<circle cx="12" cy="19" r="2"></circle>
+</svg>
+</button>
+</div>
+</div>
+</div>
+<!-- Promo Dark Card -->
+<div class="relative overflow-hidden rounded-2xl bg-[#0D0F12] text-white p-5 space-y-3 shadow-md">
+<!-- Decorative wave element in dark promo card -->
+<div class="absolute -right-6 -bottom-6 w-36 h-36 opacity-30 pointer-events-none">
+<svg class="w-full h-full text-slate-400" fill="none" viewbox="0 0 200 200">
+<path d="M0,100 C40,160 80,40 120,100 C160,160 200,40 240,100" stroke="currentColor" stroke-width="2"></path>
+<path d="M0,120 C40,180 80,60 120,120 C160,180 200,60 240,120" stroke="currentColor" stroke-width="1.5"></path>
+<path d="M0,80 C40,140 80,20 120,80 C160,140 200,20 240,80" stroke="currentColor" stroke-width="1.5"></path>
+</svg>
+</div>
+<div class="relative z-10 space-y-2">
+<h3 class="text-sm font-bold tracking-tight text-white leading-snug">
+                Unlock the full power<br/>of Vocalis
+              </h3>
+<p class="text-[11px] text-slate-400 leading-relaxed font-normal">
+                Get more credits, access premium voices and advanced features.
+              </p>
+<div class="pt-1">
+<button class="bg-white hover:bg-slate-100 text-black text-xs font-semibold px-4 py-2 rounded-full flex items-center gap-1.5 transition">
+<span>Upgrade to Pro</span>
+<span>→</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- BEGIN: YourVoicesSection -->
+<section class="space-y-3.5 pt-2">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2 text-sm font-bold text-slate-900">
+<div class="flex items-center gap-0.5">
+<span class="w-0.5 h-2 bg-slate-900 rounded-full"></span>
+<span class="w-0.5 h-3.5 bg-slate-900 rounded-full"></span>
+<span class="w-0.5 h-2 bg-slate-900 rounded-full"></span>
+</div>
+<span>Your Voices</span>
+</div>
+<a class="text-xs font-medium text-slate-700 hover:text-black flex items-center gap-1" href="#">
+<span>View all</span>
+<span>→</span>
+</a>
+</div>
+<!-- 4 Voice Cards Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+<!-- Voice 1: Ayesha -->
+<div class="card-base p-4 bg-white space-y-2 border border-slate-200/80 hover:shadow-sm transition">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center">
+<div class="flex items-center gap-0.5">
+<span class="w-0.5 h-2 bg-slate-800 rounded-full"></span>
+<span class="w-0.5 h-4 bg-slate-800 rounded-full"></span>
+<span class="w-0.5 h-2.5 bg-slate-800 rounded-full"></span>
+</div>
+</div>
+<div>
+<h4 class="text-xs font-bold text-slate-900">Ayesha</h4>
+<span class="text-[10px] text-slate-400 font-medium">Natural • Female</span>
+</div>
+</div>
+<button class="w-6 h-6 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-700 transition">
+<svg class="w-2 h-2 fill-current ml-0.5" viewbox="0 0 24 24">
+<polygon points="5 3 19 12 5 21 5 3"></polygon>
+</svg>
+</button>
+</div>
+<div class="flex justify-end pt-1">
+<button class="text-slate-300 hover:text-slate-500">
+<svg class="w-3.5 h-3.5" fill="currentColor" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="1.5"></circle>
+<circle cx="6" cy="12" r="1.5"></circle>
+<circle cx="18" cy="12" r="1.5"></circle>
+</svg>
+</button>
+</div>
+</div>
+<!-- Voice 2: Rahim -->
+<div class="card-base p-4 bg-white space-y-2 border border-slate-200/80 hover:shadow-sm transition">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center">
+<div class="flex items-center gap-0.5">
+<span class="w-0.5 h-2 bg-slate-800 rounded-full"></span>
+<span class="w-0.5 h-4 bg-slate-800 rounded-full"></span>
+<span class="w-0.5 h-2.5 bg-slate-800 rounded-full"></span>
+</div>
+</div>
+<div>
+<h4 class="text-xs font-bold text-slate-900">Rahim</h4>
+<span class="text-[10px] text-slate-400 font-medium">Natural • Male</span>
+</div>
+</div>
+<button class="w-6 h-6 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-700 transition">
+<svg class="w-2 h-2 fill-current ml-0.5" viewbox="0 0 24 24">
+<polygon points="5 3 19 12 5 21 5 3"></polygon>
+</svg>
+</button>
+</div>
+<div class="flex justify-end pt-1">
+<button class="text-slate-300 hover:text-slate-500">
+<svg class="w-3.5 h-3.5" fill="currentColor" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="1.5"></circle>
+<circle cx="6" cy="12" r="1.5"></circle>
+<circle cx="18" cy="12" r="1.5"></circle>
+</svg>
+</button>
+</div>
+</div>
+<!-- Voice 3: Sadia -->
+<div class="card-base p-4 bg-white space-y-2 border border-slate-200/80 hover:shadow-sm transition">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center">
+<div class="flex items-center gap-0.5">
+<span class="w-0.5 h-2 bg-slate-800 rounded-full"></span>
+<span class="w-0.5 h-4 bg-slate-800 rounded-full"></span>
+<span class="w-0.5 h-2.5 bg-slate-800 rounded-full"></span>
+</div>
+</div>
+<div>
+<h4 class="text-xs font-bold text-slate-900">Sadia</h4>
+<span class="text-[10px] text-slate-400 font-medium">Expressive • Female</span>
+</div>
+</div>
+<button class="w-6 h-6 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-700 transition">
+<svg class="w-2 h-2 fill-current ml-0.5" viewbox="0 0 24 24">
+<polygon points="5 3 19 12 5 21 5 3"></polygon>
+</svg>
+</button>
+</div>
+<div class="flex justify-end pt-1">
+<button class="text-slate-300 hover:text-slate-500">
+<svg class="w-3.5 h-3.5" fill="currentColor" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="1.5"></circle>
+<circle cx="6" cy="12" r="1.5"></circle>
+<circle cx="18" cy="12" r="1.5"></circle>
+</svg>
+</button>
+</div>
+</div>
+<!-- Voice 4: Tanvir -->
+<div class="card-base p-4 bg-white space-y-2 border border-slate-200/80 hover:shadow-sm transition">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center">
+<div class="flex items-center gap-0.5">
+<span class="w-0.5 h-2 bg-slate-800 rounded-full"></span>
+<span class="w-0.5 h-4 bg-slate-800 rounded-full"></span>
+<span class="w-0.5 h-2.5 bg-slate-800 rounded-full"></span>
+</div>
+</div>
+<div>
+<h4 class="text-xs font-bold text-slate-900">Tanvir</h4>
+<span class="text-[10px] text-slate-400 font-medium">Conversational • Male</span>
+</div>
+</div>
+<button class="w-6 h-6 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-700 transition">
+<svg class="w-2 h-2 fill-current ml-0.5" viewbox="0 0 24 24">
+<polygon points="5 3 19 12 5 21 5 3"></polygon>
+</svg>
+</button>
+</div>
+<div class="flex justify-end pt-1">
+<button class="text-slate-300 hover:text-slate-500">
+<svg class="w-3.5 h-3.5" fill="currentColor" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="1.5"></circle>
+<circle cx="6" cy="12" r="1.5"></circle>
+<circle cx="18" cy="12" r="1.5"></circle>
+</svg>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- END: YourVoicesSection -->
+<!-- BEGIN: RecentProjectsSection -->
+<section class="space-y-3.5 pt-2 pb-6">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2 text-sm font-bold text-slate-900">
+<svg class="w-4 h-4 text-slate-800" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Recent Projects</span>
+</div>
+<a class="text-xs font-medium text-slate-700 hover:text-black flex items-center gap-1" href="#">
+<span>View all</span>
+<span>→</span>
+</a>
+</div>
+</section>
+<!-- END: RecentProjectsSection -->
+</div>
+</main>
+<!-- END: MainContentArea -->
+</body></html>
