@@ -4,7 +4,7 @@
 	 * Keep the mark here so sidebar, landing header and future app shells
 	 * use one consistent brand treatment. `compact` is useful in tight spaces.
 	 */
-	let { compact = false } = $props<{ compact?: boolean }>();
+	let { compact = false }: { compact?: boolean } = $props();
 </script>
 
 <span class:compact class="brand-mark" aria-hidden="true">

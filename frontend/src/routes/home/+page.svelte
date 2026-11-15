@@ -11,46 +11,49 @@
 </script>
 
 <svelte:head>
-	<title>Vocalis Studio - Speech dashboard</title>
+	<title>Vocalis Studio - AI Speech Dashboard</title>
 	<meta name="description" content="Create and manage natural-sounding speech with Vocalis Studio." />
 </svelte:head>
 
 <!--
 	Dashboard composition root:
-	- Sidebar owns workspace navigation and the mobile drawer.
-	- Header owns global search affordance and primary CTA.
-	- SpeechStudio owns TTS input/voice controls only.
-	- DashboardOverview owns account usage and activity summaries.
-	- VoiceLibrary and RecentProjects render data-driven reusable collections.
-	Keep API calls/data loading out of presentational components when backend
-	endpoints are introduced; pass typed records down as props instead.
+	- Sidebar: workspace navigation & mobile drawer
+	- Header: global search shortcut & primary CTA
+	- SpeechStudio: text-to-speech hero workspace
+	- DashboardOverview: usage meters, activity stream & pro promo
+	- VoiceLibrary: interactive voice selection & audio playback
+	- RecentProjects: data-driven project collection
 -->
-<div class="dashboard-shell">
+<div class="min-h-screen flex bg-[#FBFBFC] text-slate-900">
 	<DashboardSidebar bind:mobileOpen />
-	<div class="dashboard-main">
+	<div class="flex-1 flex flex-col min-w-0">
 		<DashboardHeader bind:mobileOpen />
-		<main class="dashboard-content">
-			<section class="welcome" aria-labelledby="welcome-title">
-				<div><h1 id="welcome-title">Welcome back, Sahadat!</h1><p>Turn your text into lifelike speech with Vocalis.</p></div>
+		<main class="flex-1 p-4 sm:p-8 space-y-7 max-w-[1400px] w-full mx-auto">
+			<!-- Greeting Header -->
+			<section class="space-y-1" aria-labelledby="welcome-title">
+				<h1 id="welcome-title" class="text-2xl font-bold tracking-tight text-slate-900">
+					Welcome back, Sahadat!
+				</h1>
+				<p class="text-xs font-medium text-slate-500">
+					Turn your text into lifelike speech with Vocalis.
+				</p>
 			</section>
-			<div class="workspace-grid">
-				<SpeechStudio bind:selectedVoice />
-				<DashboardOverview />
+
+			<!-- Upper Grid: Speech Studio (8 cols) + Overview (4 cols) -->
+			<div class="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
+				<div class="xl:col-span-8">
+					<SpeechStudio bind:selectedVoice />
+				</div>
+				<div class="xl:col-span-4">
+					<DashboardOverview />
+				</div>
 			</div>
+
+			<!-- Voice Library -->
 			<VoiceLibrary bind:selectedVoice />
+
+			<!-- Recent Projects -->
 			<RecentProjects />
 		</main>
 	</div>
 </div>
-
-<style>
-	.dashboard-shell { display: flex; min-height: 100vh; background: #fbfbfc; color: #0f172a; }
-	.dashboard-main { min-width: 0; flex: 1; }
-	.dashboard-content { display: grid; width: min(1400px, 100%); gap: 27px; margin: 0 auto; padding: 29px 34px 42px; }
-	.welcome h1 { margin: 0; color: #0f172a; font-size: 24px; font-weight: 700; line-height: 1.2; }
-	.welcome p { margin: 7px 0 0; color: #64748b; font-size: 12px; }
-	.workspace-grid { display: grid; grid-template-columns: minmax(0, 2fr) minmax(270px, 1fr); align-items: start; gap: 24px; }
-	@media (max-width: 1200px) { .workspace-grid { grid-template-columns: minmax(0, 1fr); } }
-	@media (max-width: 760px) { .dashboard-content { gap: 22px; padding: 23px 18px 34px; } }
-	@media (max-width: 420px) { .dashboard-content { padding-right: 12px; padding-left: 12px; } .welcome h1 { font-size: 23px; } }
-</style>

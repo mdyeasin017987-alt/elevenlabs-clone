@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Button } from '#lib/components/ui/button/index.js';
+	import { BrandMark, Button } from '#lib/components/ui';
 
 	let menuOpen = $state(false);
 	const navItems = [
@@ -16,7 +16,7 @@
 <header class="topbar">
 	<div class="container topbar-inner">
 		<a class="brand" href="/" aria-label="Vocalis home">
-			<div class="brand-mark" aria-hidden="true"><span class="bar short"></span><span class="bar tall"></span><span class="bar mid"></span><span class="bar short"></span></div>
+			<BrandMark />
 			<span class="brand-name">Vocalis</span>
 		</a>
 		<nav id="primary-nav" class="desktop-nav" class:open={menuOpen} aria-label="Main navigation">

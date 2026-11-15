@@ -1,52 +1,77 @@
 <script lang="ts">
-	import { FolderClosed, MoreHorizontal } from '@lucide/svelte';
-	import { SectionHeading } from '#lib/components/ui';
+	import { FolderClosed, MoreHorizontal, Play, Pause } from '@lucide/svelte';
+	import { Badge, Button, SectionHeading } from '#lib/components/ui';
 	import { dashboardProjects } from '#lib/data/dashboard';
+	import { player, toggleSpeech } from '#lib/speech.svelte';
 </script>
 
-<!--
-	Project cards are deliberately data-driven. When the Projects API exists,
-	replace dashboardProjects with a load function and preserve this markup.
-	Keep actions as real links/buttons; do not wire fake download or edit actions.
--->
-<section class="projects-section" id="projects" aria-labelledby="projects-title">
+<section class="space-y-3.5 pt-2 pb-6" id="projects" aria-labelledby="projects-title">
 	<SectionHeading id="projects-title" title="Recent Projects" href="#projects" />
-	<div class="project-grid">
-		{#each dashboardProjects as project}
-			<article class="project-card">
-				<div class="project-art" class:blue={project.tone === 'blue'} class:green={project.tone === 'green'}>
-					<FolderClosed size={21} strokeWidth={1.6} />
-					<span>{project.duration}</span>
-				</div>
-				<div class="project-details">
-					<div class="project-title-row">
-						<h3>{project.title}</h3>
-						<span class="project-more" aria-hidden="true"><MoreHorizontal size={17} /></span>
+
+	<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+		{#each dashboardProjects as project, index}
+			{@const isPlaying = player.active === `project-${index}`}
+			<article
+				class="group flex flex-col justify-between overflow-hidden rounded-2xl border border-slate-200/80 bg-white transition-all duration-200 hover:border-slate-300 hover:shadow-sm"
+			>
+				<div
+					class="flex h-24 items-center justify-between px-5 transition-colors {project.tone === 'blue'
+						? 'bg-blue-50/70 text-blue-700'
+						: project.tone === 'green'
+							? 'bg-emerald-50/70 text-emerald-700'
+							: 'bg-slate-100 text-slate-700'}"
+				>
+					<div class="flex items-center gap-2.5">
+						<div class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/80 shadow-2xs backdrop-blur-xs">
+							<FolderClosed class="size-5" />
+						</div>
+						<Button
+							variant="ghost"
+							size="icon-xs"
+							class="h-8 w-8 rounded-full bg-white/80 text-slate-800 shadow-2xs hover:bg-white transition-all"
+							aria-label={`${isPlaying ? 'Stop' : 'Play'} project audio`}
+							aria-pressed={isPlaying}
+							onclick={() =>
+								toggleSpeech(
+									`project-${index}`,
+									project.title + '. ' + project.description,
+									{ lang: project.description.startsWith('Bangla') ? 'bn-BD' : 'en-US' }
+								)}
+						>
+							{#if isPlaying}
+								<Pause class="size-3 fill-current" />
+							{:else}
+								<Play class="size-3 fill-current ml-0.5" />
+							{/if}
+						</Button>
 					</div>
-					<p>{project.description}</p>
-					<div class="project-meta"><span>{project.updated}</span></div>
+
+					<Badge variant="outline" class="rounded-full bg-white/80 font-mono text-[10px] font-semibold border-current/20">
+						{project.duration}
+					</Badge>
+				</div>
+
+				<div class="flex flex-col justify-between p-4 flex-1">
+					<div class="space-y-1">
+						<div class="flex items-center justify-between gap-2">
+							<h3 class="truncate text-xs font-bold text-slate-900">{project.title}</h3>
+							<button
+								type="button"
+								class="text-slate-400 hover:text-slate-600 p-0.5 rounded focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+								aria-label={`Options for ${project.title}`}
+							>
+								<MoreHorizontal class="size-3.5" />
+							</button>
+						</div>
+						<p class="text-[11px] text-slate-500 font-medium">{project.description}</p>
+					</div>
+
+					<div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-3 text-[10px] text-slate-400">
+						<span>{project.updated}</span>
+						<span class="text-slate-400 group-hover:text-slate-700 transition-colors">Open →</span>
+					</div>
 				</div>
 			</article>
 		{/each}
 	</div>
 </section>
-
-<style>
-	.projects-section { display: grid; gap: 14px; padding: 8px 0 24px; }
-	.project-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
-	.project-card { min-width: 0; overflow: hidden; border: 1px solid #e5e7eb; border-radius: 16px; background: #fff; transition: border-color .16s ease, box-shadow .16s ease; }
-	.project-card:hover { border-color: #cbd5e1; box-shadow: 0 5px 18px rgb(15 23 42 / 4%); }
-	.project-art { display: flex; min-height: 82px; align-items: center; justify-content: space-between; background: #f1f5f9; padding: 18px; color: #334155; }
-	.project-art.blue { background: #eff6ff; color: #315b8f; }
-	.project-art.green { background: #eff6f2; color: #38634c; }
-	.project-art span { border: 1px solid currentColor; border-radius: 999px; padding: 3px 7px; font-size: 9px; opacity: .8; }
-	.project-details { padding: 13px 14px 12px; }
-	.project-title-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-	.project-title-row h3 { overflow: hidden; margin: 0; color: #0f172a; font-size: 11px; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
-	.project-more { display: grid; width: 26px; height: 26px; flex: 0 0 auto; place-items: center; border: 0; border-radius: 50%; background: transparent; color: #64748b; }
-	
-	.project-details p { margin: 4px 0 12px; color: #64748b; font-size: 9px; }
-	.project-meta { display: flex; align-items: center; justify-content: space-between; gap: 8px; border-top: 1px solid #f1f5f9; padding-top: 8px; color: #94a3b8; font-size: 9px; }
-	@media (max-width: 900px) { .project-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-	@media (max-width: 560px) { .project-grid { grid-template-columns: 1fr; } }
-</style>

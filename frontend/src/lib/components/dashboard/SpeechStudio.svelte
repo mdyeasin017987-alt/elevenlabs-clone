@@ -1,26 +1,28 @@
 <script lang="ts">
-	import { AudioLines, ChevronDown, Globe2, Pause, Play, Settings2, Sparkles, Volume2 } from '@lucide/svelte';
-	import { Button } from '#lib/components/ui';
+	import { ChevronDown, Globe2, Pause, Play, Settings2, Volume2 } from '@lucide/svelte';
+	import { Button, Card } from '#lib/components/ui';
 	import { player, speak, speechSupported, stopSpeaking } from '#lib/speech.svelte';
 
 	const maxCharacters = 5000;
-	let { selectedVoice = $bindable('Ayesha') } = $props();
+	let { selectedVoice = $bindable('Ayesha') }: { selectedVoice?: string } = $props();
+
 	let text = $state('');
 	let language = $state('bn-BD');
 	let showAdvanced = $state(false);
 	let rate = $state(1);
 	let pitch = $state(1);
 	let message = $state('');
+
 	const voices = [
-		{ name: 'Ayesha', kind: 'Natural · Female' },
-		{ name: 'Rahim', kind: 'Natural · Male' },
-		{ name: 'Sadia', kind: 'Expressive · Female' },
-		{ name: 'Tanvir', kind: 'Conversational · Male' }
+		{ name: 'Ayesha', kind: 'Natural · Female', sample: 'সুন্দর কথায় গড়ে উঠুক আপনার গল্প।' },
+		{ name: 'Rahim', kind: 'Natural · Male', sample: 'প্রতিটি নতুন দিন নিয়ে আসে নতুন সম্ভাবনা।' },
+		{ name: 'Sadia', kind: 'Expressive · Female', sample: 'এই মুহূর্তটিকে মনে রাখুন।' },
+		{ name: 'Tanvir', kind: 'Conversational · Male', sample: 'চলুন, একসাথে কিছু তৈরি করি।' }
 	];
 
 	function play(id: string, value: string) {
 		if (!value.trim()) {
-			message = 'Add some text before generating speech.';
+			message = 'Please type some text before generating speech.';
 			return;
 		}
 		if (player.active === id) {
@@ -28,132 +30,205 @@
 			return;
 		}
 		if (!speechSupported()) {
-			message = 'Speech playback is not supported in this browser.';
+			message = 'Speech synthesis playback is not supported in this browser.';
 			return;
 		}
 		message = '';
 		speak(id, value, { lang: language, voiceName: selectedVoice, rate, pitch });
 	}
+
+	function playVoiceSample() {
+		const current = voices.find((v) => v.name === selectedVoice) ?? voices[0];
+		play('studio-sample', current.sample);
+	}
 </script>
 
-<section class="tts-studio-panel" id="studio" aria-labelledby="studio-title">
-	<div class="studio-heading">
-		<div class="heading-copy">
-			<p class="eyebrow"><AudioLines size={15} /> TEXT TO SPEECH</p>
-			<h2 id="studio-title">Convert text to<br class="desktop-break" /> natural speech</h2>
-			<p class="intro">Type anything, choose a voice, and listen instantly. Support for Bangla and 50+ languages.</p>
-		</div>
-		<div class="wave-art" aria-hidden="true">
-			<svg viewBox="0 0 420 150" preserveAspectRatio="none">
-				<path d="M0 83C55 42 95 39 150 63S250 119 310 73 370 34 420 69" />
-				<path d="M0 91C55 50 95 47 150 71S250 127 310 81 370 42 420 77" />
-				<path d="M0 75C55 34 95 31 150 55S250 111 310 65 370 26 420 61" />
-				<path d="M0 99C55 58 95 55 150 79S250 135 310 89 370 50 420 85" />
-				<path d="M0 67C55 26 95 23 150 47S250 103 310 57 370 18 420 53" />
-			</svg>
-		</div>
+<Card
+	class="relative overflow-hidden rounded-2xl border-slate-200/80 bg-white p-6 sm:p-7 shadow-[0_1px_3px_rgba(0,0,0,0.03)]"
+	id="studio"
+>
+	<!-- Wave graphic in top-right background -->
+	<div
+		class="pointer-events-none absolute top-0 right-0 h-[190px] w-[50%] overflow-hidden opacity-25 mix-blend-multiply"
+		aria-hidden="true"
+	>
+		<svg viewBox="0 0 420 150" class="h-full w-full" preserveAspectRatio="none">
+			<path d="M0 83C55 42 95 39 150 63S250 119 310 73 370 34 420 69" fill="none" stroke="#64748b" stroke-width="1.4" />
+			<path d="M0 91C55 50 95 47 150 71S250 127 310 81 370 42 420 77" fill="none" stroke="#64748b" stroke-width="1.2" />
+			<path d="M0 75C55 34 95 31 150 55S250 111 310 65 370 26 420 61" fill="none" stroke="#64748b" stroke-width="1.1" />
+			<path d="M0 99C55 58 95 55 150 79S250 135 310 89 370 50 420 85" fill="none" stroke="#64748b" stroke-width="1.0" />
+			<path d="M0 67C55 26 95 23 150 47S250 103 310 57 370 18 420 53" fill="none" stroke="#64748b" stroke-width="1.0" />
+		</svg>
 	</div>
 
-	<div class="settings-row">
-		<label class="select-wrap">
-			<Globe2 size={15} />
-			<select bind:value={language} aria-label="Speech language">
-				<option value="bn-BD">Bangla (Bangladesh)</option>
-				<option value="en-US">English · United States</option>
-				<option value="en-GB">English · United Kingdom</option>
-				<option value="hi-IN">Hindi · India</option>
-				<option value="es-ES">Spanish · Spain</option>
-			</select>
-			<ChevronDown size={13} />
-		</label>
-		<label class="select-wrap voice-select">
-			<Volume2 size={15} />
-			<select bind:value={selectedVoice} aria-label="Speech voice">
-				{#each voices as voice}
-					<option value={voice.name}>{voice.name}</option>
-				{/each}
-			</select>
-			<ChevronDown size={13} />
-		</label>
-		<Button variant="outline" class="sample-button" onclick={() => play('studio-sample', 'সুন্দর কথায় গড়ে উঠুক আপনার গল্প।')}>
-			{#if player.active === 'studio-sample'}<Pause size={14} />{:else}<Play size={14} />{/if}
-			<span>{player.active === 'studio-sample' ? 'Stop sample' : 'Play Sample'}</span>
-		</Button>
-	</div>
-
-	<label class="text-entry" for="speech-text">
-		<textarea id="speech-text" bind:value={text} maxlength={maxCharacters} placeholder="Type your text here..." rows="4"></textarea>
-		<span class="character-count" class:at-limit={text.length >= maxCharacters}>{text.length.toLocaleString()} <span>/ {maxCharacters.toLocaleString()}</span></span>
-	</label>
-
-	{#if showAdvanced}
-		<div class="advanced-controls">
-			<label>Speed <output>{rate.toFixed(1)}×</output><input type="range" min="0.6" max="1.5" step="0.1" bind:value={rate} /></label>
-			<label>Pitch <output>{pitch.toFixed(1)}</output><input type="range" min="0.7" max="1.3" step="0.1" bind:value={pitch} /></label>
+	<div class="relative z-10 space-y-5">
+		<!-- Studio Header Tag -->
+		<div class="flex items-center gap-2 text-xs font-semibold text-slate-800">
+			<div class="flex items-center gap-0.5" aria-hidden="true">
+				<span class="h-2 w-0.5 rounded-full bg-slate-900"></span>
+				<span class="h-3.5 w-0.5 rounded-full bg-slate-900"></span>
+				<span class="h-2 w-0.5 rounded-full bg-slate-900"></span>
+			</div>
+			<span>Text to Speech</span>
 		</div>
-	{/if}
 
-	<div class="studio-footer">
-		<Button variant="ghost" class="advanced-toggle" aria-expanded={showAdvanced} onclick={() => (showAdvanced = !showAdvanced)}>
-			<Settings2 size={15} /><span>Advanced Settings</span><ChevronDown size={14} class={showAdvanced ? 'rotated' : ''} />
-		</Button>
-		<Button class="generate-button" disabled={!text.trim() || text.length > maxCharacters} onclick={() => play('studio', text)}>
-			{#if player.active === 'studio'}<Pause size={15} />{:else}<Sparkles size={15} />{/if}
-			<span>{player.active === 'studio' ? 'Stop playback' : 'Generate Speech'}</span>
-			<span class="button-arrow" aria-hidden="true">↗</span>
-		</Button>
+		<!-- Big Banner Title & Description -->
+		<div class="max-w-[440px] space-y-1.5">
+			<h2 class="text-2xl sm:text-[26px] font-extrabold leading-tight tracking-tight text-slate-900">
+				Convert text to<br />natural speech
+			</h2>
+			<p class="pt-1 text-xs leading-relaxed font-normal text-slate-500">
+				Type anything, choose a voice, and listen instantly.<br class="hidden sm:inline" />
+				Support for Bangla and 50+ languages.
+			</p>
+		</div>
+
+		<!-- Voice Controls Toolbar -->
+		<div class="flex flex-wrap items-center gap-2.5 pt-1">
+			<!-- Language Dropdown -->
+			<div class="relative inline-flex items-center">
+				<div
+					class="flex h-8 items-center gap-2 rounded-full border border-slate-200/90 bg-white px-3.5 text-xs font-medium text-slate-700 shadow-2xs hover:bg-slate-50 transition-colors"
+				>
+					<Globe2 class="size-3.5 text-slate-500 shrink-0" />
+					<select
+						bind:value={language}
+						aria-label="Speech language"
+						class="cursor-pointer appearance-none bg-transparent pr-4 text-xs font-medium text-slate-700 outline-none"
+					>
+						<option value="bn-BD">Bangla (Bangladesh)</option>
+						<option value="en-US">English · United States</option>
+						<option value="en-GB">English · United Kingdom</option>
+						<option value="hi-IN">Hindi · India</option>
+						<option value="es-ES">Spanish · Spain</option>
+					</select>
+					<ChevronDown class="pointer-events-none absolute right-3 size-3 text-slate-400" />
+				</div>
+			</div>
+
+			<!-- Voice Dropdown -->
+			<div class="relative inline-flex items-center">
+				<div
+					class="flex h-8 items-center gap-2 rounded-full border border-slate-200/90 bg-white px-3.5 text-xs font-medium text-slate-700 shadow-2xs hover:bg-slate-50 transition-colors"
+				>
+					<Volume2 class="size-3.5 text-slate-500 shrink-0" />
+					<select
+						bind:value={selectedVoice}
+						aria-label="Speech voice"
+						class="cursor-pointer appearance-none bg-transparent pr-4 text-xs font-medium text-slate-700 outline-none"
+					>
+						{#each voices as voice}
+							<option value={voice.name}>{voice.name}</option>
+						{/each}
+					</select>
+					<ChevronDown class="pointer-events-none absolute right-3 size-3 text-slate-400" />
+				</div>
+			</div>
+
+			<!-- Play Sample Button -->
+			<Button
+				variant="secondary"
+				size="sm"
+				class="h-8 rounded-full bg-slate-100 px-3.5 text-xs font-semibold text-slate-800 hover:bg-slate-200/80 transition-colors gap-1.5"
+				onclick={playVoiceSample}
+			>
+				{#if player.active === 'studio-sample'}
+					<Pause class="size-2.5 fill-current" />
+					<span>Stop Sample</span>
+				{:else}
+					<Play class="size-2.5 fill-current ml-0.5" />
+					<span>Play Sample</span>
+				{/if}
+			</Button>
+		</div>
+
+		<!-- Text Input Container -->
+		<div
+			class="relative rounded-2xl border border-slate-200/90 bg-white p-4 transition-all focus-within:border-slate-400 focus-within:ring-2 focus-within:ring-slate-900/5"
+		>
+			<textarea
+				id="speech-text"
+				bind:value={text}
+				maxlength={maxCharacters}
+				placeholder="Type your text here..."
+				rows={4}
+				class="w-full resize-none border-none p-0 text-xs leading-relaxed text-slate-800 placeholder-slate-400 outline-none focus:ring-0"
+			></textarea>
+			<div class="flex justify-end pt-2">
+				<span class="text-[11px] font-medium tracking-wider text-slate-400">
+					{text.length.toLocaleString()} / {maxCharacters.toLocaleString()}
+				</span>
+			</div>
+		</div>
+
+		<!-- Advanced Controls Drawer -->
+		{#if showAdvanced}
+			<div
+				class="grid grid-cols-1 gap-4 rounded-xl border border-slate-200/90 bg-slate-50/70 p-4 sm:grid-cols-2"
+			>
+				<label class="space-y-1.5 text-xs font-medium text-slate-600">
+					<div class="flex items-center justify-between">
+						<span>Speed</span>
+						<output class="font-semibold text-slate-900">{rate.toFixed(1)}×</output>
+					</div>
+					<input
+						type="range"
+						min="0.6"
+						max="1.5"
+						step="0.1"
+						bind:value={rate}
+						class="w-full accent-slate-900 cursor-pointer"
+					/>
+				</label>
+				<label class="space-y-1.5 text-xs font-medium text-slate-600">
+					<div class="flex items-center justify-between">
+						<span>Pitch</span>
+						<output class="font-semibold text-slate-900">{pitch.toFixed(1)}</output>
+					</div>
+					<input
+						type="range"
+						min="0.7"
+						max="1.3"
+						step="0.1"
+						bind:value={pitch}
+						class="w-full accent-slate-900 cursor-pointer"
+					/>
+				</label>
+			</div>
+		{/if}
+
+		<!-- Action Bottom Bar -->
+		<div class="flex flex-col gap-3 pt-1 sm:flex-row sm:items-center sm:justify-between">
+			<Button
+				variant="ghost"
+				size="sm"
+				class="h-8 gap-1.5 text-xs font-semibold text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-full px-3 justify-start sm:justify-center"
+				aria-expanded={showAdvanced}
+				onclick={() => (showAdvanced = !showAdvanced)}
+			>
+				<Settings2 class="size-3.5 text-slate-600" />
+				<span>Advanced Settings</span>
+				<ChevronDown class="size-3 text-slate-500 transition-transform duration-200 {showAdvanced ? 'rotate-180' : ''}" />
+			</Button>
+
+			<Button
+				size="default"
+				disabled={!text.trim() || text.length > maxCharacters}
+				onclick={() => play('studio', text)}
+				class="h-9 gap-2 rounded-full bg-slate-900 px-5 text-xs font-semibold text-white shadow-sm hover:bg-slate-800 transition-colors w-full sm:w-auto"
+			>
+				<div class="flex items-center gap-0.5" aria-hidden="true">
+					<span class="h-2 w-0.5 rounded-full bg-white"></span>
+					<span class="h-3.5 w-0.5 rounded-full bg-white"></span>
+					<span class="h-2 w-0.5 rounded-full bg-white"></span>
+				</div>
+				<span>{player.active === 'studio' ? 'Stop Speech' : 'Generate Speech'}</span>
+				<span aria-hidden="true" class="text-slate-400">→</span>
+			</Button>
+		</div>
+
+		{#if message}
+			<p class="text-xs text-amber-600 font-medium" role="status">{message}</p>
+		{/if}
 	</div>
-	{#if message}<p class="status-message" role="status">{message}</p>{/if}
-</section>
-
-<style>
-	.tts-studio-panel { position: relative; overflow: hidden; border: 1px solid #e5e7eb; border-radius: 20px; background: #fff; padding: 27px 28px 20px; }
-	.studio-heading { position: relative; display: flex; min-height: 162px; align-items: flex-start; justify-content: space-between; }
-	.heading-copy { position: relative; z-index: 1; }
-	.eyebrow { display: flex; align-items: center; gap: 8px; margin: 0 0 19px; color: #334155; font-size: 10px; font-weight: 700; letter-spacing: .04em; }
-	.eyebrow :global(svg) { color: #111827; }
-	h2 { margin: 0; color: #0f172a; font-size: 26px; font-weight: 800; line-height: 1.15; letter-spacing: 0; }
-	.intro { max-width: 440px; margin: 10px 0 0; color: #64748b; font-size: 12px; line-height: 1.6; }
-	.wave-art { position: absolute; top: 0; right: -9px; width: min(52%, 340px); height: 150px; color: #64748b; opacity: .25; mask-image: linear-gradient(90deg, transparent, #000 30%, #000); }
-	.wave-art svg { width: 100%; height: 100%; overflow: visible; }
-	.wave-art path { fill: none; stroke: currentColor; stroke-width: 1.3; }
-	.settings-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 14px; }
-	.select-wrap { display: inline-flex; height: 34px; max-width: 100%; align-items: center; gap: 8px; border: 1px solid #e2e8f0; border-radius: 999px; background: white; padding: 0 12px; color: #64748b; }
-	.select-wrap select { width: auto; max-width: 205px; border: 0; outline: 0; appearance: none; background: transparent; color: #334155; font-size: 10px; cursor: pointer; }
-	.voice-select select { max-width: 180px; }
-	:global(.sample-button) { height: 34px; border-color: #e2e8f0; border-radius: 999px; color: #334155; font-size: 10px; }
-	.text-entry { position: relative; display: block; border: 1px solid #e2e8f0; border-radius: 16px; background: #fff; transition: border-color .16s ease, box-shadow .16s ease; }
-	.text-entry:focus-within { border-color: #94a3b8; box-shadow: 0 0 0 3px rgb(100 116 139 / 9%); }
-	textarea { display: block; width: 100%; min-height: 148px; resize: vertical; border: 0; outline: 0; background: transparent; padding: 15px 15px 32px; color: #1e293b; font-size: 12px; line-height: 1.7; }
-	textarea::placeholder { color: #94a3b8; }
-	.character-count { position: absolute; right: 12px; bottom: 10px; color: #64748b; font-size: 10px; }
-	.character-count span { color: #94a3b8; }
-	.character-count.at-limit { color: #475569; }
-	.advanced-controls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; border: 1px solid #e2e8f0; border-top: 0; border-radius: 0 0 12px 12px; padding: 13px 15px; }
-	.advanced-controls label { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 8px; color: #64748b; font-size: 10px; }
-	.advanced-controls output { color: #1e293b; font-weight: 650; }
-	.advanced-controls input { grid-column: 1 / -1; width: 100%; accent-color: #111827; }
-	.studio-footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-top: 15px; }
-	:global(.advanced-toggle) { gap: 8px; color: #475569; font-size: 10px; }
-	:global(.advanced-toggle svg:last-child) { transition: transform .16s ease; }
-	:global(.advanced-toggle svg.rotated) { transform: rotate(180deg); }
-	:global(.generate-button) { min-height: 38px; gap: 9px; border-radius: 999px; background: #111827; padding: 0 18px; color: white; font-size: 10px; }
-	:global(.generate-button:hover) { background: #1f2937; }
-	:global(.generate-button svg) { color: white; }
-	.button-arrow { margin-left: 5px; color: #d3d8e0; font-size: 15px; }
-	.status-message { margin: 9px 0 0; color: #475569; font-size: 11px; }
-	@media (max-width: 520px) {
-		.tts-studio-panel { padding: 21px 17px 16px; }
-		.studio-heading { min-height: 147px; }
-		.wave-art { top: 10px; width: 40%; opacity: .2; }
-		.eyebrow { margin-bottom: 15px; }
-		.intro { max-width: 250px; }
-		.select-wrap { flex: 1 1 100%; justify-content: flex-start; }
-		.select-wrap select { max-width: none; flex: 1; }
-		:global(.sample-button) { flex: 1; }
-		.advanced-controls { grid-template-columns: 1fr; }
-		.studio-footer { align-items: flex-start; flex-direction: column; }
-		:global(.generate-button) { width: 100%; }
-	}
-	@media (prefers-reduced-motion: reduce) { .text-entry, :global(.advanced-toggle svg:last-child) { transition: none; } }
-</style>
+</Card>

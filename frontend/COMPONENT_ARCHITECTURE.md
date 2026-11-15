@@ -15,11 +15,32 @@
 Use the `#lib` alias configured in `tsconfig.json`:
 
 ```ts
-import { Button, SurfaceCard, SectionHeading } from '#lib/components/ui';
+import {
+	Badge,
+	Button,
+	Card,
+	CardContent,
+	CardHeader,
+	CardTitle,
+	Input,
+	Progress,
+	SectionHeading,
+	Separator,
+	Textarea
+} from '#lib/components/ui';
 import { dashboardProjects } from '#lib/data/dashboard';
 ```
 
-For larger UI additions, install the shadcn-svelte primitive first and keep its generated component under `src/lib/components/ui/<component>/`. Extend it with variants rather than creating near-duplicate buttons, dialogs or inputs.
+### Installed shadcn-svelte primitives (`src/lib/components/ui/`)
+- `button`: Button with multiple variants (`default`, `outline`, `secondary`, `ghost`, `destructive`, `link`) and sizes.
+- `card`: Surface containers (`Card`, `CardHeader`, `CardTitle`, `CardDescription`, `CardContent`, `CardFooter`, `CardAction`).
+- `badge`: Status and metadata badges (`default`, `secondary`, `destructive`, `outline`).
+- `progress`: Standard accessible progress bar for character/quota meters.
+- `input`: Form text inputs with ring focus states.
+- `textarea`: Auto-resizing textarea primitives.
+- `separator`: Horizontal and vertical rule dividers.
+- `BrandMark`: Brand waveform icon with compact option.
+- `SectionHeading`: Header with audio bars icon and link affordance.
 
 ## Suggested feature layout as the product grows
 

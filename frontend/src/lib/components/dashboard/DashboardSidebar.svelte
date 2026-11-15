@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { Clock3, FolderClosed, Home, Library, Mic2, Settings, Sparkles, Sun, X } from '@lucide/svelte';
-	import { Button, BrandMark } from '#lib/components/ui';
+	import { ChevronDown, Clock3, FolderClosed, Home, Library, Mic2, Moon, Settings, Sparkles, Sun, X } from '@lucide/svelte';
+	import { BrandMark, Button } from '#lib/components/ui';
 
-	let { mobileOpen = $bindable(false) } = $props();
+	let { mobileOpen = $bindable(false) }: { mobileOpen?: boolean } = $props();
 	let activeSection = $state('Home');
 
 	const navigation = [
@@ -13,6 +13,7 @@
 		{ label: 'History', icon: Clock3, href: '#activity' },
 		{ label: 'Settings', icon: Settings, href: '#studio' }
 	];
+
 	function handleWindowKeydown(event: KeyboardEvent) {
 		if (event.key === 'Escape') mobileOpen = false;
 	}
@@ -20,102 +21,120 @@
 
 <svelte:window onkeydown={handleWindowKeydown} />
 
+<!-- Mobile Scrim -->
 {#if mobileOpen}
-	<button class="sidebar-scrim" aria-label="Close navigation" onclick={() => (mobileOpen = false)}></button>
+	<div
+		class="fixed inset-0 z-40 bg-slate-900/40 backdrop-blur-xs md:hidden"
+		onclick={() => (mobileOpen = false)}
+		aria-hidden="true"
+	></div>
 {/if}
 
-<aside class:open={mobileOpen} class="sidebar" aria-label="Main navigation">
-	<div class="sidebar-main">
-		<div class="brand-row">
-			<a class="brand" href="#top" onclick={() => (mobileOpen = false)} aria-label="Vocalis home">
+<!-- Sidebar Container -->
+<aside
+	class="fixed inset-y-0 left-0 z-50 flex h-dvh w-64 flex-col justify-between border-r border-slate-200/80 bg-white p-5 transition-transform duration-200 ease-in-out md:sticky md:top-0 md:translate-x-0 {mobileOpen
+		? 'translate-x-0 shadow-2xl'
+		: '-translate-x-full md:shadow-none'}"
+	aria-label="Main navigation"
+>
+	<!-- Top Area -->
+	<div class="space-y-6">
+		<!-- Brand Header -->
+		<div class="flex items-center justify-between px-2 pt-1">
+			<a
+				href="#top"
+				class="flex items-center gap-2.5 text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg"
+				onclick={() => (mobileOpen = false)}
+				aria-label="Vocalis home"
+			>
 				<BrandMark />
-				<span>Vocalis</span>
+				<span class="text-xl font-bold tracking-tight">Vocalis</span>
 			</a>
-			<Button variant="ghost" size="icon-sm" class="mobile-close" aria-label="Close menu" onclick={() => (mobileOpen = false)}>
-				<X size={18} />
+			<Button
+				variant="ghost"
+				size="icon-xs"
+				class="md:hidden text-slate-500 hover:text-slate-900"
+				aria-label="Close menu"
+				onclick={() => (mobileOpen = false)}
+			>
+				<X class="size-4" />
 			</Button>
 		</div>
 
-		<p class="nav-caption">WORKSPACE</p>
-		<nav class="nav-list">
+		<!-- Navigation Links -->
+		<nav class="space-y-1 text-sm font-medium">
 			{#each navigation as item}
+				{@const isActive = activeSection === item.label}
 				<a
 					href={item.href}
-					class:active={activeSection === item.label}
-					class="nav-item"
-					aria-current={activeSection === item.label ? 'page' : undefined}
+					class="flex items-center gap-3.5 rounded-xl px-3.5 py-2.5 text-xs font-medium transition-all {isActive
+						? 'bg-slate-100 font-semibold text-slate-900'
+						: 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'}"
+					aria-current={isActive ? 'page' : undefined}
 					onclick={() => {
 						activeSection = item.label;
 						mobileOpen = false;
 					}}
 				>
-					<item.icon size={18} strokeWidth={1.8} />
+					<item.icon class="size-4 shrink-0 {isActive ? 'text-slate-900' : 'text-slate-500'}" />
 					<span>{item.label}</span>
 				</a>
 			{/each}
 		</nav>
 	</div>
 
-	<div class="sidebar-bottom">
-		<div class="plan-box">
-			<div class="plan-title"><Sparkles size={15} /> Upgrade to Pro</div>
-			<p>Unlock more credits, premium voices and advanced features.</p>
-			<Button href="#usage" class="upgrade-button">Upgrade <span aria-hidden="true">→</span></Button>
+	<!-- Bottom Area -->
+	<div class="space-y-4 pt-4 border-t border-slate-100">
+		<!-- Upgrade to Pro Card -->
+		<div class="space-y-3 rounded-2xl border border-slate-200/70 bg-[#F8F9FB] p-4">
+			<div class="flex items-center gap-1.5 text-xs font-semibold tracking-wide text-slate-800">
+				<Sparkles class="size-3.5 fill-slate-800 text-slate-800" />
+				<span>Upgrade to Pro</span>
+			</div>
+			<p class="text-[11px] leading-relaxed text-slate-500 font-normal">
+				Unlock more credits, premium voices and advanced features.
+			</p>
+			<Button
+				href="#usage"
+				size="sm"
+				class="w-full gap-1.5 rounded-full bg-slate-900 py-2 text-xs font-semibold text-white shadow-2xs hover:bg-slate-800 transition-colors"
+			>
+				<span>Upgrade</span>
+				<span aria-hidden="true">→</span>
+			</Button>
 		</div>
-		<!-- Light theme is the only implemented theme. A toggle is intentionally
-		     not shown until dark-mode tokens are applied to dashboard components. -->
-		<div class="theme-indicator" aria-label="Current theme: light">
-			<Sun size={15} /><span>Light appearance</span>
+
+		<!-- Appearance indicator -->
+		<div class="flex items-center px-1">
+			<div class="flex items-center rounded-full border border-slate-200/80 bg-slate-100 p-0.5" title="Light theme active">
+				<span class="flex h-6 w-6 items-center justify-center rounded-full bg-white text-slate-700 shadow-2xs">
+					<Sun class="size-3.5" />
+				</span>
+				<span class="flex h-6 w-6 items-center justify-center rounded-full text-slate-400">
+					<Moon class="size-3" />
+				</span>
+			</div>
+			<span class="ml-2.5 text-[11px] text-slate-500 font-medium">Light mode</span>
 		</div>
-		<button class="profile" type="button">
-			<span class="avatar">S</span>
-			<span class="profile-copy"><strong>Sahadat</strong><small>Personal workspace</small></span>
-			<span class="profile-more" aria-hidden="true">···</span>
-		</button>
+
+		<!-- User Profile -->
+		<div class="flex items-center justify-between px-1 pt-1 border-t border-slate-100">
+			<div class="flex items-center gap-2.5">
+				<div class="flex h-8 w-8 items-center justify-center rounded-full bg-slate-200 text-xs font-bold text-slate-700">
+					S
+				</div>
+				<div class="leading-tight">
+					<span class="block text-xs font-semibold text-slate-800">Sahadat</span>
+					<span class="block text-[10px] text-slate-400">Personal workspace</span>
+				</div>
+			</div>
+			<button
+				type="button"
+				class="text-slate-400 hover:text-slate-600 transition-colors p-1"
+				aria-label="User profile menu"
+			>
+				<ChevronDown class="size-3.5" />
+			</button>
+		</div>
 	</div>
 </aside>
-
-<style>
-	.sidebar {
-		position: sticky;
-		top: 0;
-		z-index: 40;
-		display: flex;
-		width: 256px;
-		min-width: 256px;
-		height: 100dvh;
-		flex-direction: column;
-		justify-content: space-between;
-		border-right: 1px solid #e8e9e9;
-		background: #fff;
-		padding: 25px 16px 18px;
-	}
-	.sidebar-main { display: flex; flex-direction: column; }
-	.brand-row { display: flex; align-items: center; justify-content: space-between; padding: 0 7px; }
-	.brand { display: inline-flex; align-items: center; gap: 9px; color: #0f172a; font-size: 20px; font-weight: 750; letter-spacing: 0; text-decoration: none; }
-	.nav-caption { margin: 42px 10px 12px; color: #94a3b8; font-size: 10px; font-weight: 700; letter-spacing: 0.1em; }
-	.nav-list { display: grid; gap: 4px; }
-	.nav-item { display: flex; align-items: center; gap: 12px; min-height: 42px; border-radius: 10px; padding: 0 11px; color: #64748b; font-size: 13px; font-weight: 550; text-decoration: none; transition: background .16s ease, color .16s ease; }
-	.nav-item:hover { background: #f8fafc; color: #111827; }
-	.nav-item.active { background: #f1f5f9; color: #111827; font-weight: 650; }
-	.sidebar-bottom { display: grid; gap: 16px; }
-	.plan-box { border: 1px solid #e2e8f0; border-radius: 16px; background: #f8f9fb; padding: 15px; }
-	.plan-title { display: flex; align-items: center; gap: 8px; color: #1e293b; font-size: 12px; font-weight: 700; }
-	.plan-title :global(svg) { color: #1e293b; }
-	.plan-box p { margin: 9px 0 13px; color: #64748b; font-size: 11px; line-height: 1.55; }
-	:global(.upgrade-button) { display: flex; width: 100%; justify-content: space-between; background: #111827; color: white; font-size: 11px; }
-	.theme-indicator { display: inline-flex; width: max-content; align-items: center; gap: 7px; border: 1px solid #e8e9e7; border-radius: 8px; padding: 7px 9px; color: #64748b; font-size: 10px; }
-	.profile { display: flex; align-items: center; gap: 10px; border: 0; border-top: 1px solid #eeefec; background: transparent; padding: 15px 3px 0; text-align: left; cursor: pointer; }
-	.avatar { display: grid; width: 34px; height: 34px; place-items: center; border-radius: 50%; background: #e2e8f0; color: #334155; font-size: 12px; font-weight: 700; }
-	.profile-copy { display: grid; gap: 3px; color: #2a2d2c; font-size: 11px; }
-	.profile-copy small { color: #929694; font-size: 10px; }
-	.profile-more { margin-left: auto; color: #747a77; font-size: 20px; letter-spacing: 0; }
-	:global(.mobile-close), .sidebar-scrim { display: none; }
-	@media (max-width: 760px) {
-		.sidebar { position: fixed; left: 0; top: 0; z-index: 80; width: min(290px, calc(100vw - 48px)); min-width: 0; transform: translateX(-105%); transition: transform .22s ease; box-shadow: 12px 0 35px rgb(22 27 23 / 10%); }
-		.sidebar.open { transform: translateX(0); }
-		:global(.mobile-close) { display: inline-flex; }
-		.sidebar-scrim { position: fixed; inset: 0; z-index: 70; display: block; border: 0; background: rgb(20 24 22 / 35%); }
-	}
-	@media (prefers-reduced-motion: reduce) { .sidebar { transition: none; } }
-</style>

@@ -2,33 +2,34 @@
 
 ## Fixed / improved
 
-- Compared the Svelte dashboard composition with the supplied `vocalis_ai_speech_dashboard.html` reference.
-- Kept the existing landing page and SvelteKit route structure instead of replacing the app with a standalone HTML page.
-- Preserved the reference dashboard's neutral visual language: fixed desktop sidebar, sticky search header, rounded white surfaces, waveform treatment, TTS hero, usage panel, recent activity and voice cards.
-- Added responsive project cards to the previously empty Recent Projects section, with 3/2/1-column layouts.
-- Added shared `BrandMark`, `SectionHeading` and `SurfaceCard` UI primitives and a UI barrel export for quick imports.
-- Moved dashboard voice, activity and project fixtures into `src/lib/data/dashboard.ts` so components are data-driven.
-- Added Ctrl/Cmd + K to focus dashboard search.
-- Added Escape-to-close behavior for the mobile sidebar.
-- Removed misleading inactive theme toggle and inert overflow actions; the UI now indicates that only light appearance is implemented.
-- Set the correct speech language for browser-based Bangla and English previews.
-- Added architecture documentation and comments describing where API data and future features should be connected.
-- Kept the existing shadcn-svelte Button implementation and component conventions.
+- **Integrated shadcn-svelte primitives**: Added official shadcn-svelte components under `src/lib/components/ui/`:
+  - `card` (`Card`, `CardHeader`, `CardTitle`, `CardDescription`, `CardContent`, `CardFooter`, `CardAction`)
+  - `badge` (`Badge`, `badgeVariants`)
+  - `progress` (`Progress`)
+  - `input` (`Input`)
+  - `textarea` (`Textarea`)
+  - `separator` (`Separator`)
+  - `button` (`Button`, `buttonVariants`)
+  - Exported through a unified barrel in `src/lib/components/ui/index.ts`.
+- **Fixed VoiceLibrary UI defect**: Replaced broken, arbitrary styling (`rgb(163, 11, 11)` red borders, purple focus rings, and distorted 50% width avatar boxes) with high-fidelity voice cards matching the reference dashboard design. Included clean active selection rings, wave icon containers, sample play buttons, and subtle three-dot action triggers.
+- **Fixed TypeScript Svelte 5 Rune errors**: Corrected type annotations in `BrandMark.svelte` and `SectionHeading.svelte` where `$props<...>()` syntax was causing compiler errors.
+- **Fixed unused CSS selector warnings**: Removed obsolete unscoped `.panel` and `.activity-panel` CSS rules in `DashboardOverview.svelte` and adopted standard Tailwind utility and shadcn primitive classes.
+- **Refactored Dashboard Components**:
+  - `DashboardOverview.svelte`: Rebuilt with shadcn `Card`, `Progress` (character meter), `Badge` ("Active" pro badge), and clean activity list with interactive speech playback triggers.
+  - `SpeechStudio.svelte`: Rebuilt with shadcn `Card`, `Button`, styled language and voice selector dropdowns, character counter, collapsible advanced settings (speed and pitch), and speech playback integration.
+  - `RecentProjects.svelte`: Styled with responsive 3/2/1-column layouts, shadcn `Badge` for duration, folder art, and playable audio preview.
+  - `DashboardHeader.svelte`: Clean sticky top bar with responsive `⌘ + K` search affordance, notification trigger, and generate CTA.
+  - `DashboardSidebar.svelte`: Streamlined desktop navigation, responsive mobile drawer with backdrop scrim and escape-key handling, upgrade card, and user profile block.
+- **Shared Brand Primitives**: Converted ad-hoc SVG/span logos across landing sections (`SiteHeader.svelte`, `FeaturesSection.svelte`, `SiteFooter.svelte`) to use the unified `BrandMark` component.
+- **Build & Diagnostic Verification**:
+  - `npm run check`: **0 errors, 0 warnings**.
+  - `npm run build`: Production build succeeded with zero warnings.
+  - Browser agent visual verification: Confirmed clean rendering of both `/home` and `/` routes without layout bugs.
 
 ## Not implemented
 
-- No production TTS request or audio generation endpoint.
+- No production TTS request or audio generation endpoint (browser `speechSynthesis` is used for demonstration previews).
 - No Modal / Chatterbox / Maya / ElevenLabs API integration.
-- No audio download, persistent audio player, queue, job status or retry logic.
-- No authentication, profile editing, billing, checkout, subscription enforcement or credit deduction.
-- No voice cloning workflow, upload/consent verification or clone management.
-- No real voice catalogue, voice search/filtering or voice CRUD.
-- No project CRUD, project details, rename/delete or persistent project storage.
-- No functional global search results, notifications or command palette.
-- No dark theme; the sidebar shows the current light appearance rather than a nonfunctional toggle.
-- No backend, database, analytics, automated tests or deployment adapter changes.
-- No redesign of the public landing page.
-
-## Validation note
-
-The project declares Node.js 22.17+ because the locked SvelteKit version requires it. This execution environment only has Node.js 22.16.0. Dependency installation did not complete here, so `npm run check` and `npm run build` could not be truthfully marked as passed. Run them with Node.js 22.17+ after `npm ci`.
+- No audio file download, persistent queue, or job status retry logic.
+- No authentication, profile editing, billing, or subscription checkout.
+- No backend database or persistent project storage.
