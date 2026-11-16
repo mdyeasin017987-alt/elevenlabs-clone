@@ -2,7 +2,7 @@ import {
 	loadHighlighter,
 	type Highlighter,
 	type HighlightedLine,
-} from "#lib/highlighter.js";
+} from "#lib/hooks/highlighter.js";
 import type { GrammarState } from "shiki/core";
 
 /**
