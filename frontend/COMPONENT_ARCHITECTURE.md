@@ -1,57 +1,32 @@
-# Component architecture and future frontend workflow
-
-## Layer boundaries
+# Component architecture
 
 | Layer | Location | Responsibility |
 |---|---|---|
-| Routes | `src/routes/` | Routing, page metadata, data loading and page composition |
-| Feature UI | `src/lib/components/dashboard/`, `landing/` | Product-specific sections and interactions |
-| Shared UI | `src/lib/components/ui/` | Buttons, cards, headings, brand primitives, future dialogs/tabs/inputs |
-| Data contracts / fixtures | `src/lib/data/` | Typed demo data and later shared response types |
-| Client services | `src/lib/` | Browser-only helpers such as preview playback |
+| Routes | `src/routes/` | Page metadata and composition only. Dashboard pages live in `(app)/` and share one layout. |
+| Feature UI | `src/lib/components/<feature>/` | `home`, `studio`, `voices`, `projects`, `models`, `history`, `settings`, `auth`, `landing`, `layout`. |
+| Shared UI | `src/lib/components/shared/` | Small product pieces used by several features (`PlayButton`, `StatTile`). |
+| Primitives | `src/lib/components/ui/` | shadcn-svelte components plus `BrandMark` and `SectionHeading`. |
+| Data | `src/lib/data/` | Demo fixtures and the single navigation list. |
+| Services | `src/lib/*.svelte.ts` | Browser-only state: speech preview, selected voice, accent palette. |
 
-## Fast component access
+## Rules
 
-Use the `#lib` alias configured in `tsconfig.json`:
+- Build UI from shadcn components in `ui/`: import with `import { Button, Card } from '#lib/components/ui'`, or `import * as Tabs from '#lib/components/ui/tabs'` for compound ones.
+- Never hard-code colours in app components. Use tokens: `bg-background`, `text-muted-foreground`, `border`, `bg-brand`, `text-brand`, `bg-tone-1..4`. They all resolve to CSS variables in `src/app.css`.
+- One component per file; a list component renders a card component (`ProjectList` -> `ProjectCard`).
+- Pages stay thin: compose components, do not hold markup.
+- Links: use the routes listed in `data/navigation.ts`. Do not link to a route that does not exist.
+- Check layouts at 360, 768 and 1280px. Use `min-w-0` / `truncate` in flex and grid children.
 
-```ts
-import { Button, SurfaceCard, SectionHeading } from '#lib/components/ui';
-import { dashboardProjects } from '#lib/data/dashboard';
-```
+## Adding a feature page
 
-For larger UI additions, install the shadcn-svelte primitive first and keep its generated component under `src/lib/components/ui/<component>/`. Extend it with variants rather than creating near-duplicate buttons, dialogs or inputs.
-
-## Suggested feature layout as the product grows
-
-```text
-src/lib/components/
-├── ui/                         # generic design-system primitives
-├── dashboard/                  # shared app shell and dashboard overview
-├── speech-studio/              # TTS editor, settings and player controls
-├── voice-library/              # voice search, filters and voice cards
-├── voice-cloning/              # upload, consent, verification and clone status
-├── projects/                   # project list, cards and project details
-└── settings/                   # account, API keys, billing and preferences
-```
-
-Move a component into a feature folder when that feature has enough components to justify its own boundary. Do not create folders for one-file abstractions prematurely.
-
-## Design-system rules
-
-- Keep the current neutral white/black/gray palette and subtle blue-gray borders.
-- Use CSS variables in `src/app.css` for new shared color, radius and spacing tokens.
-- Keep feature-specific responsive behavior close to the component; test at 360px, 390px, 768px, 1024px and wide desktop.
-- Prefer grid with `minmax(0, ...)` and `min-width: 0` to prevent overflow.
-- Use semantic headings in order, labels for controls, `aria-pressed` for toggle-like buttons and keyboard-visible focus.
-- Keep touch controls comfortably tappable on mobile.
-- Do not add gradients, glass cards or excessive icon decoration; the reference uses restrained surfaces and typography.
+1. Create `src/routes/(app)/<name>/+page.svelte`.
+2. Add `{ title, href, icon }` to `src/lib/data/navigation.ts`: the sidebar, header title and active state update automatically.
+3. Put the page's components in `src/lib/components/<name>/`.
 
 ## Before connecting a backend
 
-1. Define request/response types.
-2. Add route `load` functions or a feature service for API calls.
-3. Pass typed data into presentational components.
-4. Add explicit loading, empty and error states.
-5. Add real mutation handlers and optimistic updates only where safe.
-6. Replace browser `speechSynthesis` preview with the generated audio URL/player service.
-7. Add tests for character limits, voice selection, playback state and responsive navigation.
+1. Define request/response types next to `data/dashboard.ts`.
+2. Load data in route `load` functions; pass it to components as props.
+3. Add loading, empty and error states.
+4. Replace `speech.svelte.ts` with the real audio player.

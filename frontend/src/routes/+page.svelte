@@ -1,4 +1,5 @@
 <script lang="ts">
+	import '#lib/components/landing/landing.css';
 	import SiteHeader from '#lib/components/landing/SiteHeader.svelte';
 	import HeroSection from '#lib/components/landing/HeroSection.svelte';
 	import FeaturesSection from '#lib/components/landing/FeaturesSection.svelte';
