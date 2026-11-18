@@ -1,48 +1,37 @@
 <script lang="ts">
+	import { ArrowRight } from '@lucide/svelte';
+	import type { Component } from 'svelte';
+	import { Button } from '#lib/components/ui/button';
+
 	/**
-	 * Standard section heading for dashboard content.
-	 * Use the same component for list sections to keep spacing and link behavior
-	 * consistent as the dashboard grows.
+	 * Standard section heading: optional icon, title and an optional "view all" link.
+	 * Use it for every list section so spacing and link behaviour stay consistent.
 	 */
 	let {
 		title,
 		id,
-		href = '#',
-		linkLabel = 'View all',
-		showBars = true
+		icon: Icon,
+		href,
+		linkLabel = 'View all'
 	}: {
 		title: string;
 		id?: string;
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		icon?: Component<any>;
 		href?: string;
 		linkLabel?: string;
-		showBars?: boolean;
 	} = $props();
 </script>
 
-<div class="section-heading">
-	<div class="heading-title-wrap">
-		{#if showBars}
-			<div class="mini-sound-bars" aria-hidden="true">
-				<span></span>
-				<span></span>
-				<span></span>
-			</div>
-		{/if}
-		<h2 {id}>{title}</h2>
-	</div>
-	<a class="view-all" {href}>{linkLabel} <span aria-hidden="true">→</span></a>
+<div class="flex items-center justify-between gap-4">
+	<h2 {id} class="flex items-center gap-2 text-lg font-bold tracking-tight">
+		{#if Icon}<Icon class="size-5" />{/if}
+		{title}
+	</h2>
+	{#if href}
+		<Button {href} variant="link" class="h-auto gap-1 p-0 text-sm font-semibold text-foreground">
+			{linkLabel}
+			<ArrowRight />
+		</Button>
+	{/if}
 </div>
-
-<style>
-	.section-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
-	.heading-title-wrap { display: flex; align-items: center; gap: 8px; }
-	.mini-sound-bars { display: flex; align-items: center; gap: 2px; }
-	.mini-sound-bars span { display: block; width: 2.5px; border-radius: 999px; background: #0f172a; }
-	.mini-sound-bars span:nth-child(1) { height: 8px; }
-	.mini-sound-bars span:nth-child(2) { height: 14px; }
-	.mini-sound-bars span:nth-child(3) { height: 8px; }
-	h2 { margin: 0; color: #0f172a; font-size: 14px; font-weight: 700; }
-	.view-all { display: inline-flex; align-items: center; gap: 6px; color: #475569; font-size: 11px; font-weight: 500; text-decoration: none; white-space: nowrap; transition: color .15s ease; }
-	.view-all:hover { color: #0f172a; }
-	.view-all:focus-visible { outline: 2px solid #64748b; outline-offset: 3px; border-radius: 4px; }
-</style>
